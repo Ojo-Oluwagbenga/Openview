@@ -306,6 +306,15 @@ class _MyInAppState extends State<MyInApp> {
               );
 
               controller.addJavaScriptHandler(
+                  handlerName: "getFCM",
+                  callback: (args) async {
+                    print("Fcm token");
+                    print(fCMToken);
+
+                    return (fCMToken);
+                  });
+
+              controller.addJavaScriptHandler(
                   handlerName: "getBluetoothDevices",
                   callback: (args) async {
                     print("hheeeeeeeeeyyyyyyyy");
