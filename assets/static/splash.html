@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash </title>
+    <link rel="stylesheet" href="../static/locals/splash/style.css">
+    <link rel="stylesheet" href="../static/locals/general/css/utils.css">
+</head>
+<body>
+<div class="logo-hold">
+    <div class="logo l2" id="logo2">
+        <img src="../static/locals/splash/images/oaulogo.jpg" alt="">
+    </div>
+    <div class="logo l1" id="logo1">
+        <img src="../static/locals/splash/images/oneklass.png" alt="">
+    </div>
+</div>
+<div class="super-text-hold">
+    <div class="text-hold">
+        <div class="text t1" id="t1">One<span>Klass</span></div>
+        <div class="text t2" id="t2"><span>@ </span>Obafemi Awolowo University</div>
+        <div class="text copyright" id="cpr"><span>&copy</span> 2023</div>
+    </div>
+</div>
+<script>
+        setTimeout(() => {
+            document.getElementById("t1").style.top = "-50px";
+            document.getElementById("t2").style.opacity = "1";
+            document.getElementById("cpr").style.opacity = "1";
+            document.getElementById("logo1").style.left = "calc(50% - 110px)";
+            document.getElementById("logo2").style.left = "calc(50% + 10px)";
+            document.getElementById("logo2").style.opacity = "1";
+        }, 1500);
+
+
+</script>
+
+</body>
+</html>

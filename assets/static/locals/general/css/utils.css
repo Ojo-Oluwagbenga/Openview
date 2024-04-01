@@ -1,0 +1,222 @@
+  /* latin */
+  @font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/poppins.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Roboto Condensed';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/roboto.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  
+  body, *{
+    /* font-family: 'Raleway', sans-serif; */
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    -webkit-tap-highlight-color: rgba(128, 128, 128, 0);
+}
+.inner {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+    overflow-x: hidden;
+    margin-bottom: 40px;
+}
+.inner .subhold {
+    width: 100%;
+    transition: margin-left 0.6s ease;
+    position: relative;
+}
+svg{
+    height: 13px;
+}
+button{
+    outline: none;
+}
+
+.c-vert{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.top-nav {
+    height: 80px;
+    display: flex;
+    padding: 25px 10px;
+    position: relative;
+    z-index: 100;
+}
+.top-nav .arrow {
+    margin: 0 20px 0 10px;
+    align-self: center;
+    width: 35px;
+    height: 35px;
+    background-color: #4a4a4a;
+    border-radius: 50%;
+}
+.top-nav .arrow svg{
+    height: 18px;
+    fill: white;
+    display: flex;
+    margin: 0px auto;
+}
+.top-nav span{
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    color:#4a4a4a;
+}
+
+.hidescroll::-webkit-scrollbar {
+    display: none;
+  }
+    .preventOverflow{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    } 
+  
+  /* no scrollbar for IE, Edge and Firefox */
+  .hidescroll {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }  
+
+  .hide{
+    display: none;
+  }
+
+  .nocolor-click{
+    -webkit-tap-highlight-color: transparent;
+  }
+
+
+  .content-area{
+    width: 100%;
+  }
+  .content-area .reactport{
+    width: 100%;
+  }
+
+  /* Navigation */
+  .nav-tab{
+    position:fixed;
+    top: 0px;
+    opacity: 0;
+    left: -100%;
+    width: 280px;
+    padding: 10px;
+    transition: all 0.4s ease-out;
+    height: calc(100vh - 50px);
+    }
+    .nav-tab .super-hold{
+        background-color: white;
+        width: 100%;
+        box-shadow: 0px 0px 34px -4px #cdcdcd;
+        border-radius: 20px;
+        height: 100%;
+        overflow-y: scroll;
+        padding: 10px;
+        position: relative;
+        font-size: 14px;
+    }
+    .nav-tab .super-hold .cancel{
+        position: absolute;
+        right: 35px;
+        top: 40px;
+    }   
+    .nav-tab .super-hold .userpack{
+        width: 95%;
+        margin: 0px auto;
+        border-radius: 51px;
+        padding: 8px 10px;
+        background-color: #e5e5e5;
+    }
+    .nav-tab .super-hold .userpack .details-hold{
+        display: flex;
+    }
+
+    .nav-tab .super-hold .userpack .initial-hold{
+        height: 60px;
+        min-width: 60px;
+        background-color: whitesmoke;
+        text-align: center;
+        border-radius: 100%;
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    .nav-tab .super-hold .userpack .subdet{
+        width: 100px;
+    }
+
+    .nav-tab .super-hold .userpack .name{
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    .nav-tab .super-hold .userpack .mail{
+        color: grey;
+    }
+    .nav-tab .super-hold .nav-itempack{
+        width: 85%;
+        margin: 15px auto 30px auto;
+    }
+    .nav-tab .super-hold .abs{
+        position: absolute;
+        bottom: 0px;
+        width: calc(100% - 20px);
+        color: grey;
+    }
+
+    .nav-item{
+        cursor:pointer
+    }
+    .nav-item svg{
+        height: 13px;
+        fill: inherit;
+    }
+
+    .nav-tab .super-hold .nav-item{
+        padding: 12px 0;
+        border-bottom: 1px solid rgb(238, 238, 238);
+        display: flex;
+        cursor:pointer;
+    }
+    .nav-tab .super-hold .nav-item .svghold{
+        width: 20px;
+    }
+    
+    .nav-tab .super-hold .nav-item > :nth-child(n){
+        margin-right: 10px;
+    }
+
+  @media screen and (min-width: 600px) {
+    section.nav-tab{
+        opacity: 1;
+        display: block;
+        left: 0;
+        right: unset;
+        width: 280px;
+        padding: 10px;
+    }
+    .inner .subhold {
+        width: calc(100% - 275px) !important;
+        margin-left: 275px;
+    }
+    .nav-tab .cancel{
+        display: none;
+    }
+    
+  }
