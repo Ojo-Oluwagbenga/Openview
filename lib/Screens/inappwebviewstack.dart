@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:one_klass/api/firebase_api.dart';
+import 'package:one_klass/bluthoothswitch.dart';
 import 'package:one_klass/localnotification.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -230,6 +231,12 @@ class _MyInAppState extends State<MyInApp> {
       child: SafeArea(
         child: Scaffold(
             body: Stack(children: <Widget>[
+          bluethootIsOn
+              ? SizedBox(
+                  width: 0,
+                  height: 0,
+                )
+              : BluetoothSwitch(),
           InAppWebView(
             androidOnPermissionRequest: (InAppWebViewController controller,
                 String origin, List<String> resources) async {
