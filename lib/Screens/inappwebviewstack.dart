@@ -343,9 +343,9 @@ class _MyInAppState extends State<MyInApp> {
               controller.addJavaScriptHandler(
                 handlerName: 'writeCache',
                 callback: (args) async {
-                  // int r = 1;
+                  int r = 1;
                   for (List a in args) {
-                    item = Cache(type: a[0], packet: a[1], id: a[0]);
+                    item = Cache(type: a[0], packet: a[1], id: r);
 
                     bool take = await DatabaseCache.updateCache(
                       item!,
@@ -353,7 +353,7 @@ class _MyInAppState extends State<MyInApp> {
                     if (take == false) {
                       await DatabaseCache.addCache(item!);
                     }
-                    //r++;
+                    r++;
                   }
                 },
               );
