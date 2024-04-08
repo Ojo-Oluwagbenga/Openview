@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   firebase_core
+  geolocator_windows
   local_auth_windows
   modal_progress_hud_nsn
   permission_handler_windows

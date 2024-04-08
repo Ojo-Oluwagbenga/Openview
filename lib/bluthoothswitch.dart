@@ -1,35 +1,52 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+// import 'package:flutter/material.dart';
+// import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 
-class BluetoothSwitch extends StatefulWidget {
-  @override
-  _BluetoothSwitchState createState() => _BluetoothSwitchState();
-}
+// void main() => runApp(MyApp());
 
-class _BluetoothSwitchState extends State<BluetoothSwitch> {
-  bool _bluetoothEnabled = false;
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: "Test",
+//       home: _MyAppState(),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return SwitchListTile(
-      title: Text('Bluetooth'),
-      value: _bluetoothEnabled,
-      onChanged: (newValue) {
-        setState(() {
-          _bluetoothEnabled = newValue;
-          _toggleBluetooth(newValue);
-        });
-      },
-    );
-  }
+// class _MyAppState extends StatelessWidget {
+//   Future<void> enableBT() async {
+//     BluetoothEnable.enableBluetooth.then((value) {
+//       print(value);
+//     });
+//   }
 
-  Future<void> _toggleBluetooth(bool enable) async {
-    if (enable) {
-      // Enable Bluetooth
-      await FlutterBlue.instance.startScan(timeout: Duration(seconds: 4));
-    } else {
-      // Disable Bluetooth
-      await FlutterBlue.instance.stopScan();
-    }
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: const Text(
+//             'Bluetooth Enable Plugin',
+//           ),
+//           centerTitle: true,
+//         ),
+//         body: Center(
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               Text("Press the button to request turning on Bluetooth"),
+//               SizedBox(height: 20.0),
+//               ElevatedButton(
+//                 onPressed: (() {
+//                   enableBT();
+//                 }),
+//                 child: Text('Request to turn on Bluetooth'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

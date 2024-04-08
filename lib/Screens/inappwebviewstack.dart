@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:one_klass/api/firebase_api.dart';
 import 'package:one_klass/bluthoothswitch.dart';
 import 'package:one_klass/localnotification.dart';
@@ -64,6 +66,19 @@ class _MyInAppState extends State<MyInApp> {
   //////////////////////////////////
   ////////////////////////////
   /////////////////////
+  ///
+
+  Future<void> enableBT() async {
+    BluetoothEnable.enableBluetooth.then((value) {
+      print(value);
+    });
+  }
+
+  Future<Position> position() async {
+    Position pos = await Geolocator.getCurrentPosition();
+    return pos;
+  }
+
   Future<void> scan() async {
     await _bluetoothClassicPlugin.initPermissions();
     // Create a StreamSubscription to get notified of adapter state changes
@@ -209,6 +224,7 @@ class _MyInAppState extends State<MyInApp> {
               }
             },
           );
+    scan();
   }
 
   @override
@@ -231,12 +247,6 @@ class _MyInAppState extends State<MyInApp> {
       child: SafeArea(
         child: Scaffold(
             body: Stack(children: <Widget>[
-          bluethootIsOn
-              ? SizedBox(
-                  width: 0,
-                  height: 0,
-                )
-              : BluetoothSwitch(),
           InAppWebView(
             androidOnPermissionRequest: (InAppWebViewController controller,
                 String origin, List<String> resources) async {
@@ -326,7 +336,9 @@ class _MyInAppState extends State<MyInApp> {
                   callback: (args) async {
                     print("hheeeeeeeeeyyyyyyyy");
                     if (scanning == false) {
+                      await enableBT();
                       scan();
+
                       return ("bluethoot is off");
                     } else {
                       scan();
@@ -339,13 +351,18 @@ class _MyInAppState extends State<MyInApp> {
                   callback: (args) async {
                     return await authenticateWithBiometrics();
                   });
+              controller.addJavaScriptHandler(
+                  handlerName: "getLocation",
+                  callback: (args) async {
+                    return await position();
+                  });
 
               controller.addJavaScriptHandler(
                 handlerName: 'writeCache',
                 callback: (args) async {
-                  int r = 1;
+                  // int r = 1;
                   for (List a in args) {
-                    item = Cache(type: a[0], packet: a[1], id: r);
+                    item = Cache(type: a[0], packet: a[1], id: a[0]);
 
                     bool take = await DatabaseCache.updateCache(
                       item!,
@@ -353,7 +370,7 @@ class _MyInAppState extends State<MyInApp> {
                     if (take == false) {
                       await DatabaseCache.addCache(item!);
                     }
-                    r++;
+                    //r++;
                   }
                 },
               );

@@ -115,6 +115,7 @@
               <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
               <action android:name="android.intent.category.DEFAULT"/>
               <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
+              
 
         </intent-filter>
         </receiver>
