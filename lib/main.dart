@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:one_klass/api/firebase_api.dart';
 import 'package:one_klass/firebase_options.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'Screens/splashSreen.dart';
 
 import 'Screens/logoScreen.dart';
@@ -17,6 +18,15 @@ import 'Screens/inpplocalfile.dart';
 import 'Screens/queryCache.dart';
 
 final InAppLocalhostServer localhostServer = InAppLocalhostServer();
+
+Future<void> requestPermissions() async {
+  await Permission.location.request();
+  await Permission.camera.request();
+  await Permission.storage.request();
+  await Permission.bluetooth.request();
+  await Permission.bluetoothConnect.request();
+  await Permission.bluetoothScan.request();
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +44,7 @@ Future<void> main() async {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
   await localhostServer.start();
+  await requestPermissions();
 
   runApp(const MyApp());
 }

@@ -41,6 +41,10 @@
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
 
+        <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/ic_launcher" />
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -65,8 +69,15 @@
                 android:value="true" />
 
                 <meta-data
+                
+                
+                
                 android:name="com.google.firebase.messagin.default_notification_channel_id"
                 android:value="you can name it whatever" />
+                <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/ic_launcher" />
+               
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

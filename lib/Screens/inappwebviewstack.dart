@@ -66,27 +66,28 @@ class _MyInAppState extends State<MyInApp> {
   //////////////////////////////////
   ////////////////////////////
   /////////////////////
-  ///
+/////////////////////
 
   Future<void> enableBT() async {
-    BluetoothEnable.enableBluetooth.then((value) {
+    await BluetoothEnable.enableBluetooth.then((value) {
       print(value);
     });
   }
 
   Future<Position> position() async {
-    Position pos = await Geolocator.getCurrentPosition();
+    Position pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.lowest);
     return pos;
   }
 
   Future<void> scan() async {
-    await _bluetoothClassicPlugin.initPermissions();
+    // await _bluetoothClassicPlugin.initPermissions();
     // Create a StreamSubscription to get notified of adapter state changes
     StreamSubscription<BluetoothAdapterState> stateSubscription;
 
     Future<String> name = FlutterBluePlus.adapterName;
 
-    print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    print("hhhhhhhhhhhhhhhhhhhhhhh");
     print(name);
 
     stateSubscription = FlutterBluePlus.adapterState.listen((state) {
@@ -119,6 +120,7 @@ class _MyInAppState extends State<MyInApp> {
           discoveredDevices[event.address] = {"name": event.name, "rssi": 0};
         });
         print("cooooodeeeeeeeeeeeeeeeeeeee");
+        discoveredDevices = discoveredDevices;
         print(discoveredDevices);
 
         print("cooooodeeeeeeeeeeeeeeeeeee");
@@ -162,25 +164,31 @@ class _MyInAppState extends State<MyInApp> {
     return authenticated;
   }
 
-  Future<void> requestCameraPermission() async {
-    final status = await Permission.camera.request();
-    final foot = await Permission.storage.request();
-    final ble = await Permission.bluetooth.request();
-    final location = await Permission.location.request();
+  // void requestCameraPermission() async {
+  //   final ble = await Permission.bluetooth.request();
+  //   final location = await Permission.location.request();
 
-    final blecon = await Permission.bluetoothConnect.request();
-    final blescan = await Permission.bluetoothScan.request();
-    if (status == PermissionStatus.granted &&
-        foot == PermissionStatus.granted) {
-      // Permission granted.
-    } else if (status == PermissionStatus.denied &&
-        foot == PermissionStatus.denied) {
-      // Permission denied.
-    } else if (status == PermissionStatus.permanentlyDenied &&
-        foot == PermissionStatus.permanentlyDenied) {
-      // Permission permanently denied.
-    }
-  }
+  //   final blecon = await Permission.bluetoothConnect.request();
+  //   final blescan = await Permission.bluetoothScan.request();
+  //   if (status == PermissionStatus.granted &&
+  //       foot == PermissionStatus.granted) {
+  //     // Permission granted.
+  //   } else if (status == PermissionStatus.denied &&
+  //       foot == PermissionStatus.denied) {
+  //     await Permission.bluetooth.request();
+  //     await Permission.location.request();
+
+  //     await Permission.camera.request();
+  //     await Permission.storage.request();
+
+  //     await Permission.bluetoothConnect.request();
+  //     await Permission.bluetoothScan.request();
+  //     // Permission denied.
+  //   } else if (status == PermissionStatus.permanentlyDenied &&
+  //       foot == PermissionStatus.permanentlyDenied) {
+  //     // Permission permanently denied.
+  //   }
+  // }
 
   Future<bool> _goBack() async {
     var value = await webViewController.canGoBack();
@@ -200,11 +208,12 @@ class _MyInAppState extends State<MyInApp> {
   @override
   void initState() {
     // copy();
-    requestCameraPermission();
+
     LocalNotification.initialize(flutterLocalNotificationsPlugin);
     tz.initializeTimeZones();
 
     super.initState();
+    //requestPermissions();
 
     FlutterDownloader.registerCallback(downloadCallback);
 
@@ -226,6 +235,16 @@ class _MyInAppState extends State<MyInApp> {
           );
     scan();
   }
+
+  //   void requestPermissions() async {
+  //   await Permission.location.request();
+  //   await Permission.camera.request();
+  //   await Permission.storage.request();
+  //   await Permission.bluetooth.request();
+  //   await Permission.bluetoothConnect.request();
+  //   await Permission.bluetoothScan.request();
+  //
+  //}
 
   @override
   void dispose() {
@@ -336,12 +355,14 @@ class _MyInAppState extends State<MyInApp> {
                   callback: (args) async {
                     print("hheeeeeeeeeyyyyyyyy");
                     if (scanning == false) {
-                      await enableBT();
+                      enableBT();
                       scan();
 
                       return ("bluethoot is off");
                     } else {
                       scan();
+                      print("ffffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhh");
+                      print(discoveredDevices);
                       return (discoveredDevices);
                     }
                   });
@@ -360,9 +381,9 @@ class _MyInAppState extends State<MyInApp> {
               controller.addJavaScriptHandler(
                 handlerName: 'writeCache',
                 callback: (args) async {
-                  // int r = 1;
+                  int r = 1;
                   for (List a in args) {
-                    item = Cache(type: a[0], packet: a[1], id: a[0]);
+                    item = Cache(type: a[0], packet: a[1], id: r);
 
                     bool take = await DatabaseCache.updateCache(
                       item!,
@@ -370,7 +391,7 @@ class _MyInAppState extends State<MyInApp> {
                     if (take == false) {
                       await DatabaseCache.addCache(item!);
                     }
-                    //r++;
+                    r++;
                   }
                 },
               );
