@@ -16,6 +16,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'Screens/inappwebviewstack.dart';
 import 'Screens/inpplocalfile.dart';
 import 'Screens/queryCache.dart';
+import 'package:google_api_availability/google_api_availability.dart';
 
 final InAppLocalhostServer localhostServer = InAppLocalhostServer();
 
@@ -30,8 +31,17 @@ Future<void> requestPermissions() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseApi().initNotifications();
+  // GooglePlayServicesAvailability availability = await GoogleApiAvailability
+  //     .instance
+  //     .checkGooglePlayServicesAvailability();
+
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseApi().initNotifications();
+  } catch (error) {
+    print(error);
+  }
 
   await FlutterDownloader.initialize(
       debug: false,
@@ -60,7 +70,8 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
-        .copyWith(statusBarColor: const Color(0xFFF5F5F5)));
+        .copyWith(statusBarColor: Color.fromARGB(255, 255, 255, 255)));
+
     SystemChrome.setApplicationSwitcherDescription(
         ApplicationSwitcherDescription(
       label: 'OneKlass',
@@ -70,8 +81,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'OneKlass',
         theme: ThemeData(
-          primaryIconTheme: const IconThemeData(color: Colors.white),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          primaryIconTheme:
+              const IconThemeData(color: Color.fromARGB(255, 27, 26, 26)),
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 0, 0, 0)),
           useMaterial3: true,
         ),
         initialRoute: 'aaa',

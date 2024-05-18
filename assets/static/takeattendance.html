@@ -5,13 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- {% load static %} -->
     <link rel="stylesheet" href="../static/locals/general/css/utils.css">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
     <script src="../static/locals/general/script/jquery.js"></script>
     
     <link rel="stylesheet" href="../static/locals/takeattendance/css/style.css">
-    
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <div class="popalertBox">
@@ -72,35 +71,6 @@
             }
         </script>
     </div>
-
-    <script>
-        EMPIRICAL = {}
-        function requestHandle(packet){
-            // packet = {
-            //     url:"/user/create",
-            //     data:{},
-            //     callback:()=>{},
-            // }
-            axios({
-                method: 'POST',
-                url: window.location.origin + packet.url,
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'Pragma': 'no-cache',
-                    "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
-                },
-                data: packet.data
-            }).then(response => {
-                packet.callback(response.data)                
-            }).catch(error => {
-                console.log(error);
-                packet.callback({
-                    passed:false,
-                    Message:error.message
-                })
-            })  
-        }
-    </script>
 
     <div class="alertsuper" id="alertsuper" style="display: none;">
         <div class="alertbox">
@@ -191,16 +161,28 @@
     <div class="profileEdit-super dataCollect"   id="dataCollect" style="display: none;">
         <div class="profileEdit">
             <div class="head">Edit Profile</div>
-            <div class="head-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, facilis! Minima rerum placeat amet eius at temporibus obcaecati porro deserunt!</div>
+            <div class="head-text"> amet eius at temporibus obcaecati porro deserunt!</div>
 
             <div class="entries-hold">
                 <div class="entries">
                     <div class="">Password</div>
                     <input type="text" value="" placeholder="Enter New Password">
+                    <div class="collect_floater">
+                        <div class="cf_entry">Entry 1</div>
+                        <div class="cf_entry">Entry 1</div>
+                    </div>
+                </div>
+                <div class="entries">
+                    <div class="">Password</div>
+                    <input type="text" value="" placeholder="Enter New Password">
+                </div>
+                <div class="entries">
+                    <div class="">Password</div>
+                    <input type="text" value="" placeholder="Enter New Password">
                 </div>
             </div>
-           
-            
+
+
             <div class="action">
                 <div class="cancel">Cancel</div>
                 <div class="proceed">Proceed</div>
@@ -213,9 +195,9 @@
                 left: 0px;
                 z-index: 5;
                 width: 100%;
-                height: 100vh;    
-                padding: 20px 0;  
-                overflow-y: scroll;             
+                height: 100vh;
+                padding: 20px 0;
+                overflow-y: scroll;
                 display: flex;
                 justify-content: center;
                 flex-direction: column;
@@ -235,6 +217,30 @@
             }
             .dataCollect .entries{
                 margin: 10px 0;
+                position: relative;
+            }
+            .dataCollect .entries .keyname{
+                padding: 4px 0;
+                font-size: 13px;
+            }
+            .dataCollect .entries .collect_floater{
+                position: absolute;
+                top: calc(100% + 10px);
+                background-color: white;
+                border-radius: 5px;
+                padding: 10px;
+                width: 100%;
+                z-index: 2;
+                max-height: 150px;
+                overflow-y: scroll;
+                box-shadow: 0px 4px 15px -5px #0000009e;
+            }
+            .dataCollect .entries .collect_floater .cf_entry{
+                padding: 5px 10px;
+                background-color: whitesmoke;
+                border-radius: 3px;
+                margin-bottom: 5px;
+                font-size: 12px;
             }
             .profileEdit > .head{
                 padding-bottom: 5px;
@@ -264,7 +270,7 @@
                 border-radius: 5px;
 
             }
-            
+
 
             .profileEdit .entries-hold .head{
                 text-align: left;
@@ -308,10 +314,10 @@
                 border-radius: 4px;
             }
 
-        </style>    
+        </style>
         <script>
             function dataCollect(data){
-                // data = { 
+                // data = {
                 //         entryset:[
                 //             {name:"Email", required:true, keyname:"email", 'placeholder':"the placeholder"},
                 //             {name:"Name", required:false, keyname:"name"},
@@ -322,18 +328,36 @@
                 //         headtext:"The freaking text that shoulkd be on the head",
 
                 // }
-                
+
                 let app_str = '';
                 for (let i = 0; i < data.entryset.length; i++) {
                     const entry = data.entryset[i];
                     let req = entry.required ? "required" : "non"
                     app_str += `<div class="entries" key="${entry.keyname}" class="${i}" reqstat="${req}">
-                                    <div class="keyname">${entry.name}</div>
-                                    <input type="${entry.type}" value="" placeholder="${entry.placeholder?entry.placeholder:"Enter value here"}">
-                                </div>`;
+                        <div class="keyname">${entry.name}</div>
+                        <input type="${entry.type}" autocomplete="new-password" placeholder="${entry.placeholder?entry.placeholder:"Enter value here"}">
+                    </div>`;
                 }
 
                 $("#dataCollect .entries-hold").html(app_str);
+                for (let i = 0; i < data.entryset.length; i++) {
+                    const entry = data.entryset[i];
+                    if (entry.option_pairs){
+                        $("#dataCollect .entries[key="+entry.keyname+"] input").on('focus', function(){
+                            $("#dataCollect .entries[key="+entry.keyname+"]").append()
+                            collect_bfs("#dataCollect .entries[key="+entry.keyname+"]", 
+                                        "#dataCollect .entries[key="+entry.keyname+"] input",
+                                        entry.option_pairs, null, entry.click_callback
+                            )
+                        })
+                        $("#dataCollect .entries[key="+entry.keyname+"] input").blur(function(){
+                            setTimeout(() => {
+                                $(".collect_floater").remove()
+                            }, 300);
+                            
+                        })
+                    }
+                }
                 $("#dataCollect").css({display:"flex"});
                 $("#dataCollect .profileEdit > .head").html(data.head);
 
@@ -354,10 +378,10 @@
                             if (!isnotin){
                                 isnotin = rqd_val == "";
                                 isnotin_name =  $(this).find(".keyname").text()
-                            }                            
+                            }
                         }
                         retData[$(this).attr("key")] = rqd_val
-                        
+
                     });
                     if (isnotin){
                         popAlert(isnotin_name + " is required!");
@@ -369,11 +393,142 @@
                 $("#dataCollect .cancel").click(function(){
                     $("#dataCollect").css({display:"none"});
                     data.negativeCallback();
-                })                
+                })
 
+            }
+            
+            function collect_bfs(parent, collector, pairs, _default, click_callback){  //COLLECTOR'S BUILD FLOAT AND SEARCH FUNC.
+                //THIS WILL BUILD THE ELEMENT OBJECT WITH "PAIRS" AND LOAD IT UP IN THE "PARENT"
+                //_default is the key:value pair for when the search text is not found
+                //CLICK CALL BACK IS CALLED WHEN ANY SEARCH RESULT IS CLICKED
+                if (!_default){
+                    _default = {"text":""}
+                }
+                let str = `<div class="collect_floater">
+                    ${Object.keys(pairs).map(key=>{
+                        return `<div class="cf_entry normal" key="${key}">${key}</div>`
+                    }).join("")}
+                    ${`<div class="cf_entry default" style="display:none">${_default['text']}</div>`}
+                </div>`;
+                $(parent).append(str)
+                
+                let searchFunc = (text)=>{
+                    var rgxp = new RegExp(text, "gi");
+                    let found = false;
+                    Object.keys(pairs).map(function(key){
+                        let ktxt =  key+ " - "+ pairs[key]
+                        if (ktxt.match(rgxp) !== null){
+                            found = true
+                            $(`.collect_floater .cf_entry[key='${key}']`).css("display", "block");
+                        }else{
+                            $(`.collect_floater .cf_entry[key='${key}']`).css("display", "none");
+                        }
+                    });
+                    if (!found){
+                        //IF NOTHING IS FOUND, IT WILL hide the pallet
+                        $(`.collect_floater`).css("display", "none");
+                    }else{
+                        $(`.collect_floater`).css("display", "block");
+                    }
+                }
+                //REMOVE ALL LISTENING FUNCTION
+                $(collector).unbind('input')
+                //LISTEN FOR WHEN AN INPUT WILL BE MADE IN THE INPUT BOX
+                $(collector).on('input', function() {
+                    let text = $(this).val()        
+                    $(collector).attr("key", "_null_");
+                    searchFunc(text);
+                });
+                searchFunc($(collector).val())
+                
+                $(".collect_floater .cf_entry.normal").click(function(){
+                    //THIS IS TO REMOVE THE FLOAT WHEN A CHILD IS CLICKED
+                    let key = $(this).attr('key');
+                    let val = $(this).text();
+                    $(collector).val(val).attr("key", key);
+                    $(parent + " .collect_floater").remove()
+                    click_callback(val)
+                })
+                $(".collect_floater .cf_entry.default").click(function(){
+                    _default['callback']();
+                    $(parent + " .collect_floater").remove()
+                })
+                
             }
         </script>
     </div>
+
+    <style>
+        .blue-hold .mcircle{
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            position: absolute;
+            border: 30px solid rgb(226, 226, 226);
+            top: 0px;
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
+            animation: base 2s infinite;
+        }
+        .mcircle.c1{
+            animation-delay: 1s;
+        }
+        .mcircle.c2{
+            animation-delay: 0.5s;
+        }
+        .mcircle.c3{
+            animation-delay: 0s;
+        }
+        
+        .blue-super-hold{
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .blue-hold{
+            height: 60px;
+            width: 60px;
+            display: flex;
+            margin: 0px auto;
+            position: relative;
+            justify-content: center;
+        }
+        .blue-hold svg{
+            height: 40%;
+            margin-top: 30%;
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes base {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .fingerprint{
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 70px;
+            height: 70px;
+            background-color: #6161c5;
+            box-shadow: 0px 0px 27px -2px grey;
+            padding: 10px;
+            border-radius: 100%;
+
+        }
+        .fingerprint svg{
+            height: 50%;
+            display: flex;
+            margin: 0px auto;
+            fill: white;
+        }
+    </style>
 
     <section class="inner flex main-content">
         <section class="subhold">
@@ -389,7 +544,10 @@
             </div>
             <!-- Content -->
             <section class="content-area">
-                <section class="reactport" id="TakeAttendance" for="TakeAttendance">
+                <div class="search" style="margin:30px; background-color: rgb(207, 245, 207); padding:10px; border-radius:10px;">
+                    Check request
+                </div>
+                <section class="_reactport" id="_TakeAttendance" for="TakeAttendance">
                     <span style="font-size: 12px; color: grey; padding: 20px;">Loading models, please wait...</span>
                     
                 </section>
@@ -397,6 +555,26 @@
                     body{
                         background-color: whitesmoke;
                         box-sizing: border-box;
+                    }
+                    .sel-items-hold{
+                        width: 65%;
+                        margin: 10px auto;
+                        max-height: 60vh;
+                        overflow-y: scroll;
+                    }
+                    .sel-items{
+                        text-align: center;
+                        background-color: #656565;
+                        border-radius: 5px;
+                        color: white;
+                        margin: 10px 0;
+                        width: 100%;
+                        font-size: 13px;
+                        padding: 10px 5px;
+                    }
+                    .sel-items span{
+                        font-size: 11px; 
+                        color: rgb(241, 241, 241);
                     }
                     .headtexthold{
                         width:70%;
@@ -435,6 +613,7 @@
                         box-sizing: border-box;
                         border: 18vw solid #00000025;
                         height: 100%;
+                        background-color: black;
                         width: 100%;
                         border-radius: 100%;
                     }
@@ -670,8 +849,8 @@
                 <div class="details-hold">
                     <div class="initial-hold c-vert">O</div>
                     <div class="subdet c-vert">
-                        <span class="name __to_load c-vert preventOverflow" item="name">Ojo John</span>
-                        <span class="mail __to_load preventOverflow" item="email">ojojohn2907@gmail.com</span>
+                        <span class="name __to_load c-vert preventOverflow" item="name">Local User</span>
+                        <span class="mail __to_load preventOverflow" item="email">localemail@gmail.com</span>
                     </div>
                 </div>
             </div>
@@ -765,6 +944,51 @@
         </div>
         
     </section>
+    <script>
+        try {
+            let requestHandle = (data)=>{
+                axios({
+                    method: 'POST',
+                    url: data['url'],
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache',
+                        "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
+                    },
+                    data:data['data']
+                })
+                .then(response => {
+                    data['callback'](response)
+                })
+                .catch(error => {
+                    alert(error)
+                    console.error(error)
+                })
+            }
+            $(".search").click(function(){  
+                alert("Checking request")
+                requestHandle({
+                    url:'https://oneklass.oauife.edu.ng/api/open/class/fetch',
+                    data:{
+                        fetchset:[],
+                        fetchpair:{
+                            id__gt:0
+                        },
+                    },
+                    callback:(response)=>{
+                        alert(response)
+                        alert(JSON.stringify(response))
+                    },
+                })
+                
+            })
+
+        } catch (error) {
+            alert(error)
+            
+        }
+        
+    </script>
 
     <!-- Loads up the side bar data -->
     <script src="../static/locals/general/script/generalscript.js"></script>   

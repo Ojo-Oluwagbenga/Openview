@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
@@ -5,6 +6,7 @@ import 'dart:ui';
 import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:one_klass/api/firebase_api.dart';
 import 'package:one_klass/bluthoothswitch.dart';
 import 'package:one_klass/localnotification.dart';
@@ -76,7 +78,7 @@ class _MyInAppState extends State<MyInApp> {
 
   Future<Position> position() async {
     Position pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.lowest);
+        desiredAccuracy: LocationAccuracy.medium);
     return pos;
   }
 
@@ -358,7 +360,7 @@ class _MyInAppState extends State<MyInApp> {
                       enableBT();
                       scan();
 
-                      return ("bluethoot is off");
+                      return (false);
                     } else {
                       scan();
                       print("ffffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhh");
@@ -376,6 +378,35 @@ class _MyInAppState extends State<MyInApp> {
                   handlerName: "getLocation",
                   callback: (args) async {
                     return await position();
+                  });
+              controller.addJavaScriptHandler(
+                  handlerName: "requestHandle",
+                  callback: (args) async {
+                    for (var a in args) {
+                      var dict = a[0];
+                      print(dict);
+                      var route = dict["route"];
+                      var url = dict["url"];
+                      print(
+                          "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhgggggggggggggggggggggggggggggggggggggg");
+                      print(url);
+                      var link = Uri.parse(url);
+                      Map data = dict["data"];
+                      var pair = data["fetchpair"];
+                      var set = data["fetchset"];
+
+                      print(data);
+
+                      print(data["fetchpair"]);
+                      print(data["fetchset"]);
+                      var response =
+                          await http.post(link, body: jsonEncode(data));
+                      //     await http.post(link, body: {
+                      //   // "fetchpair": {"id__gt": "0"}.toString(),
+                      //   // "fetchset": "[]"
+                      // });
+                      return (response.body);
+                    }
                   });
 
               controller.addJavaScriptHandler(

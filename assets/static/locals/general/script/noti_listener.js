@@ -1,21 +1,21 @@
 
 $(document).ready(function(){
     //Load at end
-    let user_data = JSON.parse(sessionStorage.getItem("user_data"));
+    let user_data = JSON.parse(_localStorage.getItem("user_data"));
     let __is_dashboard = typeof(page__is_dashboard) != 'undefined';
     if (__is_dashboard){
         load_unread();
     }
-    $(".first .status .count-hold").css("display", "none");
-    
-    
-    setUpNotiSocket();
+    $(".first .noticount .count-hold").css("display", "none");
+
+
+    // setUpNotiSocket();
 
     function setUpNotiSocket(){
         let class_code = user_data.class_code;
         let user_code = user_data.user_code;
 
-        let url = `ws://${window.location.host}:8001/ws/notification/subscribe/${class_code}/${user_code}`;
+        let url = `wss://${window.location.host}:8001/ws/notification/subscribe/${class_code}/${user_code}`;
 
 
         let noti_wsConnect = new WebSocket(url);
@@ -52,12 +52,11 @@ $(document).ready(function(){
             else
                 reason = "Unknown reason";
 
-            popAlert(reason)
-            
-            
+
+
             setTimeout(() => {
-                setUpNotiSocket();       
-            }, 2000);    
+                setUpNotiSocket();
+            }, 2000);
             // $("#thingsThatHappened").html($("#thingsThatHappened").html() + "<br />" + "The connection was closed for reason: " + reason);
         };
 
@@ -65,37 +64,37 @@ $(document).ready(function(){
             popAlert("Stream connected");
         }
 
-        
+
         // noti_wsConnect.onclose = function (event) {
         //     popAlert("Reconnecting...");
         //     setTimeout(() => {
-        //         setUpNotiSocket();       
-        //     }, 300);                 
-        // };        
-        
-        noti_wsConnect.onmessage = function(e){            
-            let response = (JSON.parse(e.data))          
+        //         setUpNotiSocket();
+        //     }, 300);
+        // };
+
+        noti_wsConnect.onmessage = async function(e){
+            let response = (JSON.parse(e.data))
             console.log(response);
 
             user_data['unread_notice_count'] += 1;
-            sessionStorage.setItem("user_data", JSON.stringify(user_data))
+            await _localStorage.setItem("user_data", JSON.stringify(user_data))
 
             let sendertext = '';
             if (response.otherdata['creator_name']){
                 sendertext = "from " + response.otherdata.creator_name
             }
-            
+
             h_text = `
                 <div id="noti_alert_box">
                     <b>Notification received ${sendertext}</b>
                     <br><br>
                     <span>${response.text}</span>
-                </div>    
+                </div>
                 <script>
                     $("#noti_alert_box").click(function(){
                         window.location.href = window.location.origin + "/notifications";
                     })
-                </script>        
+                </script>
             `;
             let pa = popAlert(h_text, true);
             setTimeout(()=>{
@@ -106,10 +105,10 @@ $(document).ready(function(){
                 load_unread();
             }
 
-            
+
         }
     }
-    
+
     function load_unread(){
         // Checks if user is in a class and checks if they have unread message
         axios({
@@ -121,7 +120,7 @@ $(document).ready(function(){
                 "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
             },
             data: {}
-        }).then(response => {
+        }).then(async response => {
             response = response.data;
             if (response.passed){
                 if (response.callrefresh){
@@ -130,16 +129,16 @@ $(document).ready(function(){
                 user_data.unread_notice_count = response.unread_notice_count;
                 user_data.accept_status = response.accept_status;
                 user_data.user_type = response.user_type;
-                sessionStorage.setItem("user_data", JSON.stringify(user_data));
+                await _localStorage.setItem("user_data", JSON.stringify(user_data));
                 if (user_data.unread_notice_count != 0){
-                    $(".first .status .count-hold").css("display", "flex").text(user_data.unread_notice_count);
+                    $(".first .noticount .count-hold").css("display", "flex").text(user_data.unread_notice_count);
                 }else{
-                    $(".first .status .count-hold").css("display", "none");
+                    $(".first .noticount .count-hold").css("display", "none");
                 }
             }
         })
-        .catch(error => console.error(error))        
-        
+        .catch(error => console.error(error))
+
     }
 
 })

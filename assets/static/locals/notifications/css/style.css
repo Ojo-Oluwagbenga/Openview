@@ -1,0 +1,157 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+:root {
+    --colour-light-blue: #F0F4FF;
+    --colour-white: #FFFFFF;
+    --color-blue: #6200EE;
+
+
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Poppins', sans-serif;
+    background-color: whitesmoke;
+}
+
+.navbar {
+    background-color: #711dd8;
+    color: var(--colour-white);
+    height: 129px;
+    padding-left: 15px;
+    padding-top: 15px;
+}
+.navbar .nav-head{
+    display: flex;
+} 
+.navbar .nav-head svg{
+    height: 20px;
+    fill: white;
+}
+.navbar .nav-head .heading{
+    margin-left: calc(50% - 110px);
+}
+
+
+
+.menu {
+    width: 28px;
+}
+
+.heading {
+    font-weight: 700;
+    font-size: 20px;
+    margin-left: 100px;
+    display: inline;
+}
+
+.item-container {
+    padding: 10px 2%;
+    filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.15));
+    border-radius: 10px;
+    background-color: var(--colour-white);
+    width: 90%;
+    margin: -30px auto;
+    overflow-x: scroll;
+}
+.notifications-hold .details-hold{
+    padding: 5px;
+    padding-top: 40px;
+    height: calc(100vh - 135px);
+    overflow-y: scroll;
+}
+
+.items {
+    display: flex;
+    list-style: none;
+    margin: 0 10px;
+    padding-inline-start: 0;
+    width: max-content;
+    min-width: 100%;
+    justify-content: space-between;
+}
+
+.items li {
+    font-weight: 400;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    color: rgba(0, 0, 0, 0.7);
+    margin-right: 5px;
+    min-width: max-content;
+    border-bottom: 2px solid white;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+}
+
+.items li.active {
+    color: #000000;
+    font-weight: 700;
+    border-bottom: 2px solid var(--color-blue);
+    transition: all 0.7s ease-out;
+}
+
+.details {
+    width: 90%;
+    margin: 10px auto;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.details h5 {
+    border-radius: 5px;
+    padding: 4px 5px;
+    width: fit-content;
+    color: var(--colour-white);
+    font-weight: 400;
+    font-size: 12px;
+    background-color: grey;
+}
+.details h5.upd{
+    background-color:rgb(167, 167, 0);
+}
+.details h5.rem{
+    background-color:green;
+}
+.details h5.soc{
+    background-color:blue;
+}
+.details h5.lec{
+    background-color:deeppink;
+}
+
+.detail {
+    font-size: 14px;
+    color: black;
+    padding: 10px 3px;
+    font-weight: normal;
+    background-color: white;
+}
+.time, .figures {
+    color: black;
+    font-size: 12px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    font-weight: 400;
+}
+.time span{
+    margin-right: 5px;
+    font-size: 12px;
+    color: grey;
+    align-self: flex-end;
+}
+
+.engagements {
+    display: flex;
+}
+
+.figures {
+   margin-right: 4px; 
+}

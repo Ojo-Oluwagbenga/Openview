@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face-API AI Real-Time Facial Recognition</title>
+
+  <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+  <!-- <script src="../../static/general/recognition/face-api.min.js"></script> -->
+  <!-- <script src="https://esm.run/face-api.js"></script> -->
+  <script src="../../static/locals/general/script/jquery.js"></script>
+  <!-- <script defer src="app.js"></script> -->
+</head>
+
+<body>
+    <h1>Real-Time facial recognition</h1>
+    <video id="video" width="720" height="560" autoplay muted></video>
+
+    <style>
+        .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    flex: 1;
+    }
+
+    .video-container {
+    position: relative;
+    }
+
+    .logs {
+    width: 500px;
+    border: 1px solid black;
+    background-color: #cccc;
+    margin-bottom: 30px;
+    height: 200px;
+    overflow-y: scroll;
+    }
+
+    .logs li {
+    width: 100%;
+    text-align: left;
+    list-style: none;
+    padding: 0;
+    }
+
+    .logs li:before {
+    content: "\2192";
+    margin-right: 10px;
+    }
+
+    canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    }
+    </style>
+    <script>
+        $(document).ready(function(){
+            var onFailSoHard = function(e){
+                    console.log('failed',e);
+            }
+
+            window.URL = window.URL || window.webkitURL ;
+            navigator.getUserMedia = navigator.webkitGetUserMedia;
+
+            var video = document.querySelector('video');
+
+            if(navigator.getUserMedia)
+            {
+                navigator.getUserMedia({video: {
+                    width:400, 
+                    height:400,
+                    facingMode: "environment",
+                }},function(stream) {
+                    video.srcObject=stream;
+                    // video.play();
+                },onFailSoHard);
+            }
+
+
+            return
+
+
+
+            // const video = document.getElementById('video')
+            // let model = '../../static/general/recognition/models'
+            // Promise.all([
+            //     faceapi.nets.tinyFaceDetector.loadFromUri(model),
+            //     // faceapi.nets.faceLandmark68Net.loadFromUri(model),
+            //     // faceapi.nets.faceRecognitionNet.loadFromUri(model),
+            //     // faceapi.nets.faceExpressionNet.loadFromUri(model)
+            // ]).then(()=>{
+            //     console.log('starting vid');
+                startVideo()
+            // })
+            // console.log(faceApiJs);
+            // return;
+
+            async function startVideo() {
+                let constraints = {
+                    audio:false,
+                    video:{
+                        width:400, 
+                        height:400,
+                        facingMode: "user",
+                    }
+                }
+                // await navigator.mediaDevices.getUserMedia(
+                //     { video: {} },
+                //     stream => video.srcObject = stream,
+                //     err => console.error(err)
+                // )
+
+                stream = await navigator.webkitGetUserMedia(constraints);
+                video.srcObject = stream;
+            }
+
+            async function recall(){
+                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                console.log(detections);
+                recall()
+            }
+
+            video.addEventListener('play', () => {
+                console.log("playy");
+                // const canvas = faceapi.createCanvasFromMedia(video)
+                // document.body.append(canvas)
+                // const displaySize = { width: video.width, height: video.height }
+                // faceapi.matchDimensions(canvas, displaySize)
+                // return
+                recall();
+                // setInterval(async () => {
+                   
+                //     // const resizedDetections = faceapi.resizeResults(detections, displaySize)
+                //     // canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+                //     // faceapi.draw.drawDetections(canvas, resizedDetections)
+                //     // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+                //     // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+                // }, 100)
+            })
+        })
+
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tensorflow Face Recognition</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+</head>
+<body>    
+    <div id="face-finder">
+        <canvas id="canvas"></canvas>
+        <img src="../../static/general/images/noimage.png" />
+        <p id="status">Searching, this shouldn't take long...</p>
+        <div style="padding: 10px; background-color: red;" onclick="call()">Find</div>
+    </div>
+    <style>
+        #face-finder {
+        max-width: 600px;
+        }
+        #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+        }
+        img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        }
+        #status {
+        width: 100%;
+        background: black;
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 1em 0;
+        font-family: sans-serif;
+        }
+    </style>
+
+    <script>
+        let model;
+        let img;
+        async function pres(){
+            model = await blazeface.load();  
+            img = document.querySelector("img");
+            console.log("loadede");
+        }
+        pres();
+        
+        function call(){
+            console.log("finding")
+            findFaces();
+        }
+        async function findFaces() {
+            
+            const predictions = await model.estimateFaces(img, false);
+            if (predictions.length > 0) {
+                console.log(predictions);    
+            }else {
+                document.getElementById("status").innerText = "No Face(s) Found";
+            }
+        }
+        
+    </script>
+  </body>
+</html> -->

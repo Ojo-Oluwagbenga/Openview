@@ -60,6 +60,8 @@ dependencies:
   firebase_messaging: ^14.7.16
   bluetooth_enable_fork: ^0.1.6
   geolocator: ^11.0.0
+  google_api_availability: ^5.0.0
+  http: ^1.2.0
 
 
 

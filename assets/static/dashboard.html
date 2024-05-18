@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Style -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.0.js"></script> -->
+
+    <link rel="stylesheet" href="../static/locals/general/css/utils.css">
+    <script src="../static/locals/general/script/jquery.js"></script>
+
+
+    <link rel="stylesheet" href="../static/locals/dashboard/css/style.css">
+    <link rel="stylesheet" href="../static/locals/general/css/utils.css">
+    <link rel="stylesheet" href="../static/locals/general/css/alert.css">
+    <link rel="stylesheet" href="../static/locals/notifications/css/style.css">
+    <script src="../static/locals/general/script/communicator.js"></script>
+    <script src="../static/locals/general/script/generalscript.js"></script>
+    <meta name="destroyed" content="{{destroyed}}">
+</head>
+<body>
+    <main class="page flex">
+        <script>
+            page__is_dashboard=true;
+            __last_active_poll_path=''
+        </script>
+
+        <div class="popalertBox">
+            <style>
+                .popalertBox{
+                    position: fixed;
+                    width: 100vw;
+                    bottom: 60px;
+                    display: none;
+                    z-index: 220;
+                }
+                .popalertBox .mypop{
+                    width: max-content;
+                    max-width: 90%;
+                    margin: 0px auto;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    background-color: #343434d1;
+                    transition: opacity 0.3s ease-in;
+                    backdrop-filter: blur(3px);
+                    color: white;
+                    font-weight: normal;
+                    font-family: 'Roboto Condensed', sans-serif;
+                    font-size: 14px;
+                    letter-spacing: 0.5px;
+                }
+            </style>
+            <div class="mypop">Pop Here</div>
+            <script>
+                function popAlert(text, live_on){
+                    $(".popalertBox").css('display', 'block');
+                    $(".popalertBox .mypop").css('opacity', '1').html(text);
+
+                    if (!live_on){
+                        setTimeout(() => {
+                            $(".popalertBox .mypop").css('opacity', '0');
+                            setTimeout(() => {
+                                $(".popalertBox").css('display', 'none');
+                            }, 400);
+                        }, 2000);
+                    }else{
+                        let obj = {
+                            kill:()=>{
+                                $(".popalertBox .mypop").css('opacity', '0');
+                                setTimeout(() => {
+                                    $(".popalertBox").css('display', 'none');
+                                }, 400);
+                            }
+                        }
+                        return obj
+                    }
+                }
+            </script>
+        </div>
+
+        <div class="alertsuper" id="alertsuper" style="display: none;">
+            <div class="alertbox">
+                <div class="head">head</div>
+                <div class="text">Text</div>
+                <div class="but-hold">
+                    <div class="actions negative" >Cancel</div>
+                    <div class="actions positive">Proceed</div>
+                </div>
+            </div>
+            <style>
+                .alertsuper{
+                    position: fixed;
+                    top: 0px;
+                    left: 0px;
+                    z-index: 10;
+                    width: 100%;
+                    height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    backdrop-filter: blur(10px)
+                }
+
+                .alertbox{
+                    position: relative;
+                    top: -5%;
+                    width: 80%;
+                    padding: 10px;
+                    margin: 0px auto;
+                    max-width: 300px;
+                    border-radius: 10px;
+                    box-shadow: 0px 0px 36px -12px grey;
+                    background-color: #f5f5f5e8;
+                    backdrop-filter: blur(10px);
+                }
+                .alertbox .head{
+                    font-weight: bold;
+                    text-align: center;
+                    padding: 10px 0px;
+                    border-bottom: 1px solid grey;
+                }
+                .alertbox .text{
+                    padding: 20px 10px;
+                    font-size: 15px;
+                }
+                .alertbox .text .upd-entry{
+                  background-color: #0080001c;
+                  padding: 5px;
+                  border-radius: 5px;
+                  margin: 5px 0;
+                  font-size: 13px;
+                }
+                .alertbox .text .upd-entry.error{
+                  background-color: #ff0c001c;
+                }
+                .alertbox .but-hold{
+                    display: flex;
+                    justify-content: space-around;
+                }
+                .alertbox .but-hold > :nth-child(n){
+                    padding: 10px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: bold;
+                    background-color: #f5f5f542;
+                    border-radius: 10px;
+                }
+            </style>
+            <script>
+                function confirmChoice(data){
+                    // data = {
+                        //     head:"Headtect",
+                        //     text:text,
+                        //     postiveCallback:func,
+                        //     negativeCallback:func
+                    // }
+
+                    $("#alertsuper").css({"display":'flex'});
+                    $("#alertsuper .head").text(data.head);
+                    $("#alertsuper .text").html(data.text);
+
+                    $("#alertsuper .actions").unbind("click");
+                    $("#alertsuper .positive").click(() => {
+                        $("#alertsuper").css({"display":'none'});
+                        data.positiveCallback()
+                    });
+                    $("#alertsuper .negative").click(function(){
+                        $("#alertsuper").css({"display":'none'});
+                        data.negativeCallback();
+                    });
+                }
+            </script>
+
+        </div>
+        <div class="alertsuper" id="_alertsuper" style="display: none;">
+            <div class="alertbox">
+                <div class="head">Offline</div>
+                <div class="text">Connection not established. What would you like to do?</div>
+                <div class="refresh" id="refresh">Refresh</div>
+                <div class="refresh" id="local_attendance">Open local attendance</div>
+                <div class="but-hold">
+                    <div class="actions negative" >Cancel</div>
+                </div>
+            </div>
+            <style>
+                .alertsuper .refresh{
+                    padding: 8px 0;
+                    text-align: center;
+                    background-color: #636363;
+                    border-radius: 8px;
+                    margin: 10px;
+                    font-size: 13px;
+                    font-weight: normal;
+                    color: white;
+                }
+            </style>
+            <script>
+                function offline_options(data){
+                    $("#_alertsuper").css({"display":'flex'});
+                    $("#_alertsuper #refresh").click(function(){
+                        location.reload()
+                    })
+                    $("#_alertsuper #local_attendance").click(function(){
+                        window.location.href = 'http://localhost:8080/assets/static/takeattendance.html'
+                    })
+                    $("#_alertsuper .negative").click(function(){
+                        $("#_alertsuper").css({"display":'none'});
+                    });
+                }
+            </script>
+        </div>
+        <div class="offline_pop c-vert" style="display: none;">
+            <div class="cont">
+                <div class="slash">!</div>
+                <svg fill="red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M54.2 202.9C123.2 136.7 216.8 96 320 96s196.8 40.7 265.8 106.9c12.8 12.2 33 11.8 45.2-.9s11.8-33-.9-45.2C549.7 79.5 440.4 32 320 32S90.3 79.5 9.8 156.7C-2.9 169-3.3 189.2 8.9 202s32.5 13.2 45.2 .9zM320 256c56.8 0 108.6 21.1 148.2 56c13.3 11.7 33.5 10.4 45.2-2.8s10.4-33.5-2.8-45.2C459.8 219.2 393 192 320 192s-139.8 27.2-190.5 72c-13.3 11.7-14.5 31.9-2.8 45.2s31.9 14.5 45.2 2.8c39.5-34.9 91.3-56 148.2-56zm64 160a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"/></svg>
+            </div>
+            <style>
+                .offline_pop{
+                    position: fixed;
+                    bottom: 10px;
+                    right: 10px;
+                    width: 50px;
+                    height: 50px;
+                    z-index: 10;
+                    box-shadow: 0px 0px 14px 1px grey;
+                    background-color: #e5e5e5;
+                    border-radius: 50%;
+                }
+                .offline_pop .cont{
+                    position: relative;
+                    margin: 0px auto;
+                }
+                .offline_pop .cont .slash{
+                    position: absolute;
+                    color: red;
+                    text-shadow: #fff;
+                }
+    
+            </style>
+            <script>
+                $(".offline_pop").click(function(){
+                    offline_options()
+                })
+                function initiate_offline_pop(){
+                    $(".offline_pop").css({'display':'flex'})
+                }
+            </script>
+        </div>
+
+        <section class="inner flex main-content">
+            <section class="subhold">
+                <header class="header">
+                    
+                    <div class="intro" style="color: black; display: flex;padding-bottom: 10px;">
+                        <div class="m-item c-vert _menu" style="margin-right: 10px;">
+                            <svg style="height: 16px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+                        </div>
+                        <b item="name" class="__to_load" style="font-size: 18px;">---</b>
+                            <!-- <b class="__to_load" item="name">--</b> -->
+                        
+                        <!-- <p class="low">Have a nice day</p> -->
+                    </div>
+                    
+                    <div class="first">
+                        <div class="menu">
+                            
+                            <div class="m-item"> 
+                                <p item="email" class="__to_load" style=" width: max-content;">--</p>
+                            </div>
+                            
+                        </div>
+                        <div class="menu db-logout" style="background-color: #711dd8; color: white;">
+                            <div class="m-item"> 
+                                <p style=" width: max-content;">Log Out</p>
+                            </div>
+                        </div>
+                        <div class="updhold">
+                            <div class="status newuploads" style="display:none">
+                                <div class="count-hold c-vert" ></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/></svg>
+                            </div>
+                            <div class="status noticount nav-item" redir="/notifications">
+                                <div class="count-hold c-vert" style="display:none"></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"/></svg>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </header>
+
+                <!-- <a href="https://192.168.43.173:8000/test">The freaking link</a> -->
+                <!-- <section class="unsigned limited" to="member rep"  >
+                    <div class="head">Just a few steps away</div>
+                    <div class="process-pack">
+                        <div class="process-hold">
+                            <div class="head">Find your class</div>
+                            <div class="extra-text">Hey <span class="_fname"></span>! Seems you haven't joined a class yet. Would you like to join one now?</div>
+                            <div class="process-proceed" id="joinclass">
+                                Yes, Proceed.
+                            </div>
+                        </div>
+
+                    </div>
+                </section> -->
+
+                <section id="Invites_Super" class="reactport" for="Invites_Super" >
+
+                </section>
+                <section class="for-instructor limited" to="instructor">
+                    <div class="head" style="display: flex; justify-content: space-between;">
+                        <div class="pending-head"  id="createattendance" style="padding: 2px 10px; background-color: grey; border-radius: 5px; color: white;">
+                            <div class="c-vert" style="font-size: 14px; font-weight: normal;">Create</div>
+                            <div class="seeall c-vert" style="width:50px;">
+                                
+                                <svg style="height: 14px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M240 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H176V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H384c17.7 0 32-14.3 32-32s-14.3-32-32-32H240V80z"/></svg>
+                            </div>
+                            <script>$("#createattendance").click(()=>{window.location.href= "./createattendance"})</script>
+                        </div>
+
+                        <div class="c-vert">My Attendance Polls</div>
+
+
+                    </div>
+                    <div class="notifications-hold reactport limited" to="instructor" for="All_AttendanceSuper" id="All_AttendanceSuper"  style="margin-top: 30px; padding: 0px;">
+
+                    </div>
+                    <style>
+                        #All_AttendanceSuper .box.one{
+                            margin: 15px auto !important;
+                        }
+                    </style>
+                </section>
+                
+                <!-- Styling for the invites -->
+                <style>
+                    .invitecontrol{
+                        width:100%;
+                        position: relative;
+                        height: 30px;
+                        min-width: 150px;
+                        font-weight: normal;
+                    }
+                    .invitecontrol .entry{
+                        padding: 3px 0px;
+                        border-radius: 5px;
+                        position: absolute;
+                        right: 0px;
+                        bottom: 0px;
+                        text-align: center;
+                        color: white;
+                        width: 45%;
+                        font-size: 12px;
+                        background-color: green;
+                    }
+                </style>
+
+                <section id="Attendance_Super" class="reactport limited" to="member rep"  for="Attendance_Super" >
+                    
+                </section>
+                <style>
+                    .loading-overlay{
+                        height: 100%;
+                        width: 30%;
+                        background-image: linear-gradient(-90deg, white, transparent);
+                        z-index: 3;
+                        position: absolute;
+                        left: 0px;
+                        animation: loading-overlay-anim 1s linear infinite;
+                    }
+                    .box-row{
+                        position: relative;
+                        height: max-content;
+                        width: max-content;
+                        
+                    }
+                    @keyframes loading-overlay-anim{
+                        0% {
+                            left: 0;
+                            opacity: 0;
+
+                        }
+                        50% {
+                            opacity: 0.7;
+                        }
+                        100% {
+                            left: 70%;
+                            opacity: 0;
+                        }
+                    }
+                    
+                </style>
+
+                <section class="reactport limited" to="member rep" for="PendingDue_Super" id="PendingDue_Super" style="margin-top: 15px;">
+
+                </section>
+
+                <section class="reactport limited" to="member rep" for="TodayclassSuper" id="TodayclassSuper">
+
+                </section>
+
+            </section>
+
+        </section>
+
+        <section class="nav-tab c-vert">
+            <div class="super-hold">
+                <div class="cancel">
+                    <svg style="height: 15px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+                </div>
+                <div class="userpack c-vert">
+                    <div class="details-hold">
+                        <div class="initial-hold c-vert">O</div>
+                        <div class="subdet c-vert">
+                            <span class="name __to_load c-vert preventOverflow" item="name">--</span>
+                            <span class="mail __to_load preventOverflow" item="email">---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-itempack">
+                    <div class="nav-item" redir="/dashboard">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg>                    </span>
+                        <span class="ttl">Dashboard</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+                    <div class="nav-item" redir="/account">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+                        </span>
+                        <span class="ttl">Account</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+                    <div class="nav-item limited" to="member rep" redir="/allattendances">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>
+                        </span>
+                        <span class="ttl">Attendances</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+                    <div class="nav-item limited" to="member rep" redir="/allpayments">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM64 80c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16zm128 72c8.8 0 16 7.2 16 16v17.3c8.5 1.2 16.7 3.1 24.1 5.1c8.5 2.3 13.6 11 11.3 19.6s-11 13.6-19.6 11.3c-11.1-3-22-5.2-32.1-5.3c-8.4-.1-17.4 1.8-23.6 5.5c-5.7 3.4-8.1 7.3-8.1 12.8c0 3.7 1.3 6.5 7.3 10.1c6.9 4.1 16.6 7.1 29.2 10.9l.5 .1 0 0 0 0c11.3 3.4 25.3 7.6 36.3 14.6c12.1 7.6 22.4 19.7 22.7 38.2c.3 19.3-9.6 33.3-22.9 41.6c-7.7 4.8-16.4 7.6-25.1 9.1V440c0 8.8-7.2 16-16 16s-16-7.2-16-16V422.2c-11.2-2.1-21.7-5.7-30.9-8.9l0 0c-2.1-.7-4.2-1.4-6.2-2.1c-8.4-2.8-12.9-11.9-10.1-20.2s11.9-12.9 20.2-10.1c2.5 .8 4.8 1.6 7.1 2.4l0 0 0 0 0 0c13.6 4.6 24.6 8.4 36.3 8.7c9.1 .3 17.9-1.7 23.7-5.3c5.1-3.2 7.9-7.3 7.8-14c-.1-4.6-1.8-7.8-7.7-11.6c-6.8-4.3-16.5-7.4-29-11.2l-1.6-.5 0 0c-11-3.3-24.3-7.3-34.8-13.7c-12-7.2-22.6-18.9-22.7-37.3c-.1-19.4 10.8-32.8 23.8-40.5c7.5-4.4 15.8-7.2 24.1-8.7V232c0-8.8 7.2-16 16-16z"/></svg>
+                        </span>
+                        <span class="ttl">Payments</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+                    <div class="nav-item limited" to="rep" redir="/withdrawals">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M535 41c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l64 64c4.5 4.5 7 10.6 7 17s-2.5 12.5-7 17l-64 64c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l23-23L384 112c-13.3 0-24-10.7-24-24s10.7-24 24-24l174.1 0L535 41zM105 377l-23 23L256 400c13.3 0 24 10.7 24 24s-10.7 24-24 24L81.9 448l23 23c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L7 441c-4.5-4.5-7-10.6-7-17s2.5-12.5 7-17l64-64c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM96 64H337.9c-3.7 7.2-5.9 15.3-5.9 24c0 28.7 23.3 52 52 52l117.4 0c-4 17 .6 35.5 13.8 48.8c20.3 20.3 53.2 20.3 73.5 0L608 169.5V384c0 35.3-28.7 64-64 64H302.1c3.7-7.2 5.9-15.3 5.9-24c0-28.7-23.3-52-52-52l-117.4 0c4-17-.6-35.5-13.8-48.8c-20.3-20.3-53.2-20.3-73.5 0L32 342.5V128c0-35.3 28.7-64 64-64zm64 64H96v64c35.3 0 64-28.7 64-64zM544 320c-35.3 0-64 28.7-64 64h64V320zM320 352a96 96 0 1 0 0-192 96 96 0 1 0 0 192z"/></svg>
+                        </span>
+                        <span class="ttl">Withdrawals</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="nav-item" redir="/notifications">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/></svg>
+                        </span>
+                        <span class="ttl">Notifications</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+                    <div class="nav-item" redir="/viewgroups">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M211.2 96a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zM32 256c0 17.7 14.3 32 32 32h85.6c10.1-39.4 38.6-71.5 75.8-86.6c-9.7-6-21.2-9.4-33.4-9.4H96c-35.3 0-64 28.7-64 64zm461.6 32H576c17.7 0 32-14.3 32-32c0-35.3-28.7-64-64-64H448c-11.7 0-22.7 3.1-32.1 8.6c38.1 14.8 67.4 47.3 77.7 87.4zM391.2 226.4c-6.9-1.6-14.2-2.4-21.6-2.4h-96c-8.5 0-16.7 1.1-24.5 3.1c-30.8 8.1-55.6 31.1-66.1 60.9c-3.5 10-5.5 20.8-5.5 32c0 17.7 14.3 32 32 32h224c17.7 0 32-14.3 32-32c0-11.2-1.9-22-5.5-32c-10.8-30.7-36.8-54.2-68.9-61.6zM563.2 96a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zM321.6 192a80 80 0 1 0 0-160 80 80 0 1 0 0 160zM32 416c-17.7 0-32 14.3-32 32s14.3 32 32 32H608c17.7 0 32-14.3 32-32s-14.3-32-32-32H32z"/></svg>
+                        </span>
+                        <span class="ttl">View Groups</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+
+                    <div class="nav-item limited" to="rep instructor" redir="/creategroup">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg>
+                        </span>
+                        <span class="ttl">Create new Group</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+                    <div class="nav-item limited" to="rep" redir="/school-admin">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>
+                        </span>
+                        <span class="ttl">View class data</span>
+                        <span class="svghold c-vert">
+                            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="nav-itempack" style="margin-top: 40px">
+                    <div class="nav-item db-logout">
+                        <span class="svghold c-vert">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/></svg>                            </span>
+                        </span>
+                        <span class="ttl">Log out</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="announce-float c-vert nav-item" redir="/createnotification">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M480 32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9L381.7 53c-48 48-113.1 75-181 75H192 160 64c-35.3 0-64 28.7-64 64v96c0 35.3 28.7 64 64 64l0 128c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V352l8.7 0c67.9 0 133 27 181 75l43.6 43.6c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V300.4c18.6-8.8 32-32.5 32-60.4s-13.4-51.6-32-60.4V32zm-64 76.7V240 371.3C357.2 317.8 280.5 288 200.7 288H192V192h8.7c79.8 0 156.5-29.8 215.3-83.3z"/></svg>
+        </div>
+
+        <footer class="foot">
+            <div class="icon-flex">
+                <div class="c-vert s-hold">
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg> -->
+                    <svg xmlns="http://www.w3.org/2000/svg" style="height:16px; fill: #282828;" viewBox="0 0 576 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c.2 35.5-28.5 64.3-64 64.3H128.1c-35.3 0-64-28.7-64-64V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24zM352 224a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zm-96 96c-44.2 0-80 35.8-80 80c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16c0-44.2-35.8-80-80-80H256z"/></svg>
+                </div>
+                
+                <div class="attendance c-vert s-hold">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="height:16px;"  viewBox="0 0 384 512"><path d="M192 0c-41.8 0-77.4 26.7-90.5 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H282.5C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16z"/></svg>
+                    <div class="notice"></div>
+                </div>
+                <div class="c-vert s-hold nav-item" redir="./account">
+                    <svg xmlns="http://www.w3.org/2000/svg"  style="height:16px;"   viewBox="0 0 512 512"><!-- --><path d="M256 112c-48.6 0-88 39.4-88 88C168 248.6 207.4 288 256 288s88-39.4 88-88C344 151.4 304.6 112 256 112zM256 240c-22.06 0-40-17.95-40-40C216 177.9 233.9 160 256 160s40 17.94 40 40C296 222.1 278.1 240 256 240zM256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-46.73 0-89.76-15.68-124.5-41.79C148.8 389 182.4 368 220.2 368h71.69c37.75 0 71.31 21.01 88.68 54.21C345.8 448.3 302.7 464 256 464zM416.2 388.5C389.2 346.3 343.2 320 291.8 320H220.2c-51.36 0-97.35 26.25-124.4 68.48C65.96 352.5 48 306.3 48 256c0-114.7 93.31-208 208-208s208 93.31 208 208C464 306.3 446 352.5 416.2 388.5z"/></svg></div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="../static/locals/dashboard/script/script.js"></script>
+    <script src="../static/locals/general/script/noti_listener.js"></script>
+    <script src="../static/locals/builds/general/TodayclassSuper.js"></script>
+    <script src="../static/locals/builds/general/Invites_Super.js"></script>
+    <script src="../static/locals/builds/pay/PendingDue_Super.js"></script>
+    <script src="../static/locals/builds/attendance/Attendance_Super.js"></script>
+    <!-- THE SCRIPT BELOW LOADS THE FORMAT FOR LOADING ALL ATTENDANCES FOR THE INSTRUCTORS -->
+    <script src="../static/locals/builds/attendance/All_AttendanceSuper.js"></script>
+
+</body>
+</html>
