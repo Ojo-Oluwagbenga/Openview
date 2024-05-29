@@ -91,8 +91,17 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/
-    - assets/static/takeattendance.html
+    - assets/static/
+    - assets/static/_takeattendance.html
+    - assets/static/account.html
+    - assets/static/login.html
+    - assets/static/dashboard.html
+    - assets/static/signup.html
+    - assets/static/locals/general/script/
+    - assets/static/locals/general/css/
+   
     - assets/static/splash.html
+    - assets/static/locals/general/script/communicator copy.js
     - assets/static/not_found.html
     - assets/static/locals/general/css/utils.css
     - assets/static/locals/general/script/jquery.js
@@ -106,7 +115,14 @@ flutter:
     - assets/static/locals/splash/style.css
     - assets/static/locals/splash/images/oaulogo.jpg
     - assets/static/locals/splash/images/oneklass.png
-    - assets/static/locals/general/images/not_found.png
+    - assets/static/locals/notifications/css/style.css
+    - assets/static/locals/signup/css/style.css
+    - assets/static/locals/takeattendance/css/style.css
+    - assets/static/locals/signup/js/script.js
+
+    - assets/static/locals/signup/img/
+  
+ 
     - assets/static/locals/recognition/models/tiny_face_detector_model-shard1
 
 

@@ -410,6 +410,17 @@ class _MyInAppState extends State<MyInApp> {
                   });
 
               controller.addJavaScriptHandler(
+                  handlerName: "networkAvailability",
+                  callback: (args) async {
+                    var link = Uri.parse("www.google.com");
+                    await http.post(link).then((value) {
+                      return value;
+                    }, onError: (value) {
+                      return "network error client offline";
+                    });
+                  });
+
+              controller.addJavaScriptHandler(
                 handlerName: 'writeCache',
                 callback: (args) async {
                   int r = 1;

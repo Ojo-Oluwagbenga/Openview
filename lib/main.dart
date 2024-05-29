@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
-        .copyWith(statusBarColor: Color.fromARGB(255, 255, 255, 255)));
+        .copyWith(statusBarColor: Color.fromARGB(245, 245, 245, 245)));
 
     SystemChrome.setApplicationSwitcherDescription(
         ApplicationSwitcherDescription(

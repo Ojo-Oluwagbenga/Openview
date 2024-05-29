@@ -64,7 +64,7 @@ class _InAppLocalState extends State<InAppLocal> {
               InAppWebView(
                 initialUrlRequest: URLRequest(
                     url: Uri.parse(
-                        "http://localhost:8080/assets/static/takeattendance.html")),
+                        "http://localhost:8080/assets/static/dashboard.html")),
                 androidOnPermissionRequest: (InAppWebViewController controller,
                     String origin, List<String> resources) async {
                   return PermissionRequestResponse(
