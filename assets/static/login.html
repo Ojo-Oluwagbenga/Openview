@@ -71,7 +71,10 @@
             ]
 
             let _res = await window.flutter_inappwebview.callHandler("requestHandle", subdata)
-            return JSON.parse(_res)
+            let _res2 ={}
+            _res2["data"] = JSON.parse(_res)
+
+            return (_res2)
         }
 
         //THIS PAGE SHOULD NOT LOAD EXCEPT THE USER IS LOGGED OUT OF LIVE

@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
-        .copyWith(statusBarColor: Color.fromARGB(245, 245, 245, 245)));
+        .copyWith(statusBarColor: Color.fromARGB(255, 255, 255, 255)));
 
     SystemChrome.setApplicationSwitcherDescription(
         ApplicationSwitcherDescription(
@@ -82,9 +82,9 @@ class MyApp extends StatelessWidget {
         title: 'OneKlass',
         theme: ThemeData(
           primaryIconTheme:
-              const IconThemeData(color: Color.fromARGB(255, 27, 26, 26)),
+              const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
           colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 0, 0, 0)),
+              seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
         initialRoute: 'aaa',

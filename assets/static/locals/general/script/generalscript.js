@@ -61,7 +61,10 @@ async function _axios(data){
     ]
 
     let _res = await window.flutter_inappwebview.callHandler("requestHandle", subdata)
-    return JSON.parse(_res)
+    let _res2 ={}
+    _res2["data"] = JSON.parse(_res)
+
+    return (_res2)
 }
 async function _writeallcachetolocalstorage(){
     if (localStorage.getItem('platform') != 'web'){
