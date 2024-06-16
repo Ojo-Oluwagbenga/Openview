@@ -24,6 +24,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:bluetooth_classic/models/device.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:flutter/services.dart';
 import 'package:bluetooth_classic/bluetooth_classic.dart';
@@ -261,8 +262,33 @@ class _MyInAppState extends State<MyInApp> {
     send!.send([id, status, progress]);
   }
 
+  var _controller = null;
+  Future<bool> checkCanConnect() async {
+    try {
+      var link = Uri.parse("https://google.com");
+      var resp = await http.get(link).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          // Time has run out, do what you wanted to do.
+          return http.Response(
+              'Error', 408); // Request Timeout response status code
+        },
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      bool ret = await checkCanConnect();
+      _controller.evaluateJavascript(source: "promptNetworkChange($ret);");
+    });
+
     return WillPopScope(
       onWillPop: () => _goBack(),
       child: SafeArea(
@@ -312,14 +338,15 @@ class _MyInAppState extends State<MyInApp> {
                   assetFilePath: "assets/static/not_found.html");
             },
             key: webViewKey,
-            initialUrlRequest:
-                // URLRequest(url: Uri.parse('http://192.168.43.172:8000/')),
-                URLRequest(url: Uri.parse('http://oneklass2.oauife.edu.ng')),
+            initialUrlRequest: URLRequest(
+                url: Uri.parse(
+                    "http://localhost:8080/assets/static/dashboard.html")),
+            // URLRequest(url: Uri.parse('http://oneklass2.oauife.edu.ng')),
             pullToRefreshController: pullToRefreshController,
             onWebViewCreated: (controller) {
               webViewController = controller;
-
-              controller.evaluateJavascript(source: "testFunction(params);");
+              _controller =
+                  controller; //THIS ASSIGNMENT ALLOWS ME TO MANIPULATE THE CODE FROM ABOVE
 
               controller.addJavaScriptHandler(
                 handlerName: 'clipboardManager',
@@ -405,19 +432,16 @@ class _MyInAppState extends State<MyInApp> {
                       //   // "fetchpair": {"id__gt": "0"}.toString(),
                       //   // "fetchset": "[]"
                       // });
+                      print("The resp0202");
+                      print(response);
                       return (response.body);
                     }
                   });
 
               controller.addJavaScriptHandler(
-                  handlerName: "networkAvailability",
+                  handlerName: "checkCanConnect",
                   callback: (args) async {
-                    var link = Uri.parse("www.google.com");
-                    await http.post(link).then((value) {
-                      return value;
-                    }, onError: (value) {
-                      return "network error client offline";
-                    });
+                    return await checkCanConnect();
                   });
 
               controller.addJavaScriptHandler(

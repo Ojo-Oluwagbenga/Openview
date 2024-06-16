@@ -143,9 +143,9 @@ $(document).ready(function(){
       $(".first .newuploads").click(function(){
           popAlert("Uploading attendance, please wait...")
           console.log(attd_records)
-          axios({
+          _axios({
               method: 'POST',
-              url: '../api/attendance/upload_bulk_mark',
+              url: 'api/attendance/upload_bulk_mark',
               headers: {
                   'Cache-Control': 'no-cache',
                   'Pragma': 'no-cache',
@@ -257,7 +257,7 @@ $(document).ready(function(){
                                 text:`Set up fingerprint on this device to activate instant attendance marking?`,
                                 negativeCallback:()=>{},
                                 positiveCallback:()=>{
-                                    window.location.href = window.location.origin + "/fingersetup";
+                                    window.location.href = origin + "/fingersetup";
                                 }
                             })
                         }
@@ -378,34 +378,13 @@ $(document).ready(function(){
             positiveCallback:logout
         })
     })
-    function logout(){
+    async function logout(){
         popAlert("Logging out...");
+    
         communicator("deleteCache", ['login'], (ret)=>{})
-        _axios({
-            method: 'POST',
-            url: 'api/user/logout',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-                "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
-            },
-            data: {}
-        }).then(response => {
-            response = response.data;
-            console.log(response);
-            _localStorage.clear();
-    
-            if (response.passed){
-    
-                location.reload();
-    
-            }else{
-                popAlert("Unable to destroy session. Reload page")
-            }
-        }).catch(error => console.error(error))
-    
+        await _localStorage.clear();
+        window.location.href = 'http://localhost:8080/assets/static/login.html'
     }
-    
 
 
     function toggleHam(tgi){

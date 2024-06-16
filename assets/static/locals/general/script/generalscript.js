@@ -46,7 +46,7 @@ class _localStorage {
     }
 }
 async function _axios(data){
-    alert("goiing in...")
+    
     let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
     let subdata = [
         {
@@ -62,25 +62,39 @@ async function _axios(data){
 
     let _res = await window.flutter_inappwebview.callHandler("requestHandle", subdata)
     let _res2 ={}
+    alert(_res)
     _res2["data"] = JSON.parse(_res)
 
     return (_res2)
 }
+if (!_localStorage.getItem("user_data")){
+    // window.location.href = 'http://localhost:8080/assets/static/login.html'
+}
+
+let __user_data = JSON.parse(_localStorage.getItem("user_data"));
+
 async function _writeallcachetolocalstorage(){
-    if (localStorage.getItem('platform') != 'web'){
-        //QUERY THE LOCALSTORAGE
-        let ret = await async_communicator('fetchCache', ['localStorage'])
-        let lstore = {}
-        if (ret){
-            lstore = JSON.parse(ret['localStorage'])
-        }
-        for (const key in lstore) {
-            localStorage.setItem(key, lstore[key])            
-        }
+    let ret = await async_communicator('fetchCache', ['localStorage'])
+    if (!ret){
+        _localStorage.clear()// THIS ALSO CLEARS THE LOCALSTORAGE
+        window.location.href = 'http://localhost:8080/assets/static/login.html'
+    }
+    let lstore = JSON.parse(ret['localStorage'])
+    if (!lstore['user_data']){
+        _localStorage.clear()// THIS ALSO CLEARS THE LOCALSTORAGE
+        window.location.href = 'http://localhost:8080/assets/static/login.html'
+    }
+    for (const key in lstore) {
+        localStorage.setItem(key, lstore[key])            
     }
 }
-_writeallcachetolocalstorage()
+try {
+    window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+        _writeallcachetolocalstorage()
+    })
+} catch (error) {}
 
+let origin = 'https://oneklass2.oauife.edu.ng'
 
 function _run_fly_changes(){
     communicator('fetchCache', ['fly_changes'], (ret)=>{
@@ -94,15 +108,12 @@ function _run_fly_changes(){
         $("body").append(changes['style'])
     })
 }
-if (!_localStorage.getItem("user_data")){
-    _localStorage.clear()
-    window.location.href = 'http://localhost:8080/assets/static/login.html'
-}
+
 
 $(document).ready(function(){
     
     //For the Nav Bar
-    let __user_data = JSON.parse(_localStorage.getItem("user_data"));
+    
 
     function pageSetup(){
         let curl = window.location.href;
@@ -154,7 +165,7 @@ $(document).ready(function(){
                 return
     
             }
-            window.location.href = redir;
+            window.location.href = origin + redir;
         }
     })
     
@@ -168,6 +179,7 @@ $(document).ready(function(){
     })
     _run_fly_changes()
 })
+
 function writeToClipboard(text, prompt) {    
     const type = "text/plain";
     let blob = new Blob([text], {type});
@@ -176,28 +188,10 @@ function writeToClipboard(text, prompt) {
     popAlert(prompt?prompt:"Copied to clipboard!")
 }
 
-function logout(){
+async function logout(){
     popAlert("Logging out...");
+
     communicator("deleteCache", ['login'], (ret)=>{})
-    _axios({
-        method: 'POST',
-        url: 'api/user/logout',
-        headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
-        },
-        data: {}
-    }).then(async response => {
-        response = response.data;
-        console.log(response);
-        await _localStorage.clear();
-
-        if (response.passed){
-            location.reload();
-        }else{
-            popAlert("Unable to destroy session. Reload page")
-        }
-    }).catch(error => console.error(error))
-
+    await _localStorage.clear();
+    window.location.href = 'http://localhost:8080/assets/static/login.html'
 }
