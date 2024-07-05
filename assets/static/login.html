@@ -31,6 +31,7 @@
                 return lstore[key]
             }
             static async setItem(key, value){
+                localStorage.setItem(key, value)
                 let ret = await async_communicator('fetchCache', ['localStorage'])
                 let lstore = {}
                 if (ret){
@@ -42,7 +43,6 @@
                         ['localStorage', JSON.stringify(lstore)]
                     ], (ret)=>{}
                 );
-                localStorage.setItem(key, value)
                 return null
             }
             static async clear(){
@@ -58,6 +58,7 @@
         async function _axios(data){
             alert("goiing in...")
             let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
+            // let base_url = "http://192.168.207.172:8000/" + data.url
             let subdata = [
                 {
                     "requestName":"req_name",
@@ -253,115 +254,119 @@
             }
         </script>
     </div>
-    <div class="alertsuper" id="_alertsuper" style="display: none;">
-        <div class="alertbox">
-            <div class="head">Offline</div>
-            <div class="text">Connection not established. What would you like to do?</div>
-            <div class="refresh" id="refresh">Refresh</div>
-            <div class="refresh" id="local_attendance">Open local attendance</div>
-            <div class="but-hold">
-                <div class="actions negative" >Cancel</div>
-            </div>
-        </div>
-        <style>
-            .alertsuper .refresh{
-                padding: 8px 0;
-                text-align: center;
-                background-color: #636363;
-                border-radius: 8px;
-                margin: 10px;
-                font-size: 13px;
-                font-weight: normal;
-                color: white;
-            }
-        </style>
-        <script>
-            function offline_options(data){
-                $("#_alertsuper").css({"display":'flex'});
-                $("#_alertsuper #refresh").click(function(){
-                    location.reload()
-                })
-                $("#_alertsuper #local_attendance").click(function(){
-                    window.location.href = 'http://localhost:8080/assets/static/takeattendance.html'
-                })
-                $("#_alertsuper .negative").click(function(){
-                    $("#_alertsuper").css({"display":'none'});
-                });
-            }
-        </script>
-    </div>
-    <div class="offline_pop c-vert gelatine bounce" style="display: none;">
-        <div class="cont">
-            <img src="../static/locals/general/images/nointernet.png" alt="" srcset="">
-            <div class="slash">No Internet. Click for more options</div>
-        </div>
-        <style>s
-            .offline_pop{
-                position: fixed;
-                top: 20px;
-                width: 300px;
-                left: calc(50% - 150px);
-                padding: 10px;
-                z-index: 10;
-                box-shadow: 0px 0px 14px 1px grey;
-                background-color: #e5e5e5;
-                border-radius: 20px;
-            }
-            .offline_pop .cont{
-                position: relative;
-                display: flex;
-                width: max-content;
-                margin: 0px auto;
-            }
-            .offline_pop .cont img{
-                height: 20px;
-                display: block;
-            }
-            .offline_pop .cont .slash{
-                padding: 0px 8px;
-                text-shadow: #fff;
-                font-size: 12px;
-            }
-            .gelatine {
-                
-            }
-            @keyframes gelatine {
-                from, to { transform: scale(1, 1); }
-                25% { transform: scale(0.9, 1.1); }
-                50% { transform: scale(1.1, 0.9); }
-                75% { transform: scale(0.95, 1.05); }
-            }
 
-        </style>
-        <script>
-            $(".offline_pop").click(function(){
-                offline_options()
-            })
-            function initiate_offline_pop(){
-                $(".offline_pop").css({'display':'flex'})
-                setTimeout(() => {
-                    $(".offline_pop").css({
-                        "animation": "gelatine 0.5s 2",
-                    })    
-                }, 2000);
-            }
-            
-            var G_state = true
-            async function prePromptNetwork(state){
-                let _res = await window.flutter_inappwebview.callHandler("checkCanConnect", []);
-                promptNetworkChange(_res)
-            }
-            function promptNetworkChange(state){
-                if (state){
-                    G_state = true;
-                    $(".offline_pop").css({'display':'none'})
+    <div class="offline_manager">
+        <div class="alertsuper" id="_alertsuper" style="display: none;">
+            <div class="alertbox">
+                <div class="head">Offline</div>
+                <div class="text">Connection not established. What would you like to do?</div>
+                <div class="refresh" id="refresh">Refresh</div>
+                <div class="refresh" id="local_attendance">Use local attendance</div>
+                <div class="but-hold">
+                    <div class="actions negative" >Cancel</div>
+                </div>
+            </div>
+            <style>
+                .alertsuper .refresh{
+                    padding: 8px 0;
+                    text-align: center;
+                    background-color: #636363;
+                    border-radius: 8px;
+                    margin: 10px;
+                    font-size: 13px;
+                    font-weight: normal;
+                    color: white;
                 }
-                if (state == false && G_state != false){
-                    G_state = false;
-                    initiate_offline_pop();
+            </style>
+            <script>
+                function offline_options(data){
+                    $("#_alertsuper").css({"display":'flex'});
+                    $("#_alertsuper #refresh").click(function(){
+                        location.reload()
+                    })
+                    $("#_alertsuper #local_attendance").click(function(){
+                        window.location.href = 'http://localhost:8080/assets/static/takeattendance.html'
+                    })
+                    $("#_alertsuper .negative").click(function(){
+                        $("#_alertsuper").css({"display":'none'});
+                    });
                 }
-            }
-        </script>
+            </script>
+        </div>
+        <div class="offline_pop c-vert gelatine bounce" style="display: none;">
+            <div class="cont">
+                <img src="../static/locals/general/images/nointernet.png" alt="" srcset="">
+                <div class="slash">No Internet. Click for more options</div>
+            </div>
+            <style>
+                .offline_pop{
+                    position: fixed;
+                    top: 20px;
+                    width: 300px;
+                    left: calc(50% - 150px);
+                    padding: 10px;
+                    z-index: 10;
+                    box-shadow: 0px 0px 14px 1px grey;
+                    background-color: #e5e5e5;
+                    border-radius: 20px;
+                }
+                .offline_pop .cont{
+                    position: relative;
+                    display: flex;
+                    width: max-content;
+                    margin: 0px auto;
+                }
+                .offline_pop .cont img{
+                    height: 20px;
+                    display: block;
+                }
+                .offline_pop .cont .slash{
+                    padding: 0px 8px;
+                    text-shadow: #fff;
+                    font-size: 12px;
+                }
+                .gelatine {
+                    
+                }
+                @keyframes gelatine {
+                    from, to { transform: scale(1, 1); }
+                    25% { transform: scale(0.9, 1.1); }
+                    50% { transform: scale(1.1, 0.9); }
+                    75% { transform: scale(0.95, 1.05); }
+                }
+
+            </style>
+            <script>
+                $(".offline_pop").click(function(){
+                    offline_options()
+                })
+                function initiate_offline_pop(){
+                    $(".offline_pop").css({'display':'flex'})
+                    setTimeout(() => {
+                        $(".offline_pop").css({
+                            "animation": "gelatine 0.5s 2",
+                        })    
+                    }, 2000);
+                }
+                
+                var G_state = true
+                async function prePromptNetwork(state){
+                    let _res = await window.flutter_inappwebview.callHandler("checkCanConnect", []);
+                    promptNetworkChange(_res)
+                }
+                function promptNetworkChange(state){
+                    console.log("The promt")
+                    if (state){
+                        G_state = true;
+                        $(".offline_pop").css({'display':'none'})
+                    }
+                    if (state == false && G_state != false){
+                        G_state = false;
+                        initiate_offline_pop();
+                    }
+                }
+            </script>
+        </div>
     </div>
 
     
@@ -754,14 +759,10 @@
                     }
                 }).
                 then(response => {
-                    alert('Alerting run resp');
-                    alert(response)
                     $("#sign-up").find('.wave-hold').css({"display":'none'});
                     $("#sign-up").find('.text').css({"display":'block'});
-                    console.log(response)
                     let data = response.data;
                     if (data.passed){
-
                         if (data['type']){
                             if (data['type'] == 'temp'){
                                 confirmChoice({
@@ -811,16 +812,20 @@
                             async (ret)=>{  
                                 localStorage.clear()
                                 await _localStorage.clear();
+                                await _localStorage.setItem("pub_api_key", data.pub_api_key)
                                 await _localStorage.setItem('user_data', JSON.stringify(data.response))
                                 await _localStorage.setItem('user_base_face', data.user_base_face)
                                 ret = await async_communicator('fetchCache', ['localStorage'])
                                 let lstore = {}
-                                alert("Alerting ret now")
-                                alert(ret)
+                                alert("Alerting key now")
+                                alert(data['login_key'])
 
                                 alert("Entering the live page")
+                                // window.location.replace('http://localhost:8080/assets/static/dashboard.html');
+                                // let base_url = "http://192.168.207.172:8000/" + data.url
 
                                 window.location.replace('https://oneklass2.oauife.edu.ng/dashboard?login_key=' + data['login_key']);
+                                // window.location.replace('http://192.168.207.172:8000/dashboard?login_key=' + data['login_key']);
                             })
                         })
                     

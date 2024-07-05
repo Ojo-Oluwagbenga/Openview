@@ -7,6 +7,7 @@ class _localStorage {
         return localStorage.getItem(key)
     }
     static async setItem(key, value){
+        localStorage.setItem(key, value)
         let ret = await async_communicator('fetchCache', ['localStorage'])
         let lstore = {}
         if (ret){
@@ -18,9 +19,10 @@ class _localStorage {
                 ['localStorage', JSON.stringify(lstore)]
             ], (ret)=>{}
         );
-        return localStorage.removeItem(key)
+        return null;
     }
     static async removeItem(key){
+        localStorage.removeItem(key)
         let ret = await async_communicator('fetchCache', ['localStorage'])
         let lstore = {}
         if (ret){
@@ -34,7 +36,7 @@ class _localStorage {
                 ['localStorage', JSON.stringify(lstore)]
             ], (ret)=>{}
         );
-        return localStorage.removeItem(key)
+        return null
     }
     static async clear(){
         await async_communicator('writeCache',
@@ -48,6 +50,9 @@ class _localStorage {
 async function _axios(data){
     
     let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
+    // let base_url = "http://192.168.207.172:8000/" + data.url
+    data.data['platform'] = 'mobile'
+
     let subdata = [
         {
             "requestName":"req_name",
@@ -62,10 +67,10 @@ async function _axios(data){
 
     let _res = await window.flutter_inappwebview.callHandler("requestHandle", subdata)
     let _res2 ={}
-    alert(_res)
     _res2["data"] = JSON.parse(_res)
-
     return (_res2)
+
+    
 }
 if (!_localStorage.getItem("user_data")){
     // window.location.href = 'http://localhost:8080/assets/static/login.html'

@@ -27,6 +27,7 @@
         <script>
             page__is_dashboard=true;
             __last_active_poll_path='';
+           
         </script>
 
         <div class="popalertBox">
@@ -176,79 +177,127 @@
             </script>
 
         </div>
-        <div class="alertsuper" id="_alertsuper" style="display: none;">
-            <div class="alertbox">
-                <div class="head">Offline</div>
-                <div class="text">Connection not established. What would you like to do?</div>
-                <div class="refresh" id="refresh">Refresh</div>
-                <div class="refresh" id="local_attendance">Open local attendance</div>
-                <div class="but-hold">
-                    <div class="actions negative" >Cancel</div>
+        <div class="offline_manager">
+            <div class="alertsuper" id="_alertsuper" style="display: none;">
+                <div class="alertbox">
+                    <div class="head">Offline</div>
+                    <div class="text">Connection not established. What would you like to do?</div>
+                    <div class="refresh" id="refresh">Refresh</div>
+                    <div class="refresh" id="local_attendance">Use local attendance</div>
+                    <div class="but-hold">
+                        <div class="actions negative" >Cancel</div>
+                    </div>
                 </div>
+                <style>
+                    .alertsuper .refresh{
+                        padding: 8px 0;
+                        text-align: center;
+                        background-color: #636363;
+                        border-radius: 8px;
+                        margin: 10px;
+                        font-size: 13px;
+                        font-weight: normal;
+                        color: white;
+                    }
+                </style>
+                <script>
+                    function offline_options(data){
+                        $("#_alertsuper").css({"display":'flex'});
+                        $("#_alertsuper #refresh").click(function(){
+                            location.reload()
+                        })
+                        $("#_alertsuper #local_attendance").click(function(){
+                            window.location.href = 'http://localhost:8080/assets/static/takeattendance.html'
+                        })
+                        $("#_alertsuper .negative").click(function(){
+                            $("#_alertsuper").css({"display":'none'});
+                        });
+                    }
+                </script>
             </div>
-            <style>
-                .alertsuper .refresh{
-                    padding: 8px 0;
-                    text-align: center;
-                    background-color: #636363;
-                    border-radius: 8px;
-                    margin: 10px;
-                    font-size: 13px;
-                    font-weight: normal;
-                    color: white;
-                }
-            </style>
-            <script>
-                function offline_options(data){
-                    $("#_alertsuper").css({"display":'flex'});
-                    $("#_alertsuper #refresh").click(function(){
-                        location.reload()
-                    })
-                    $("#_alertsuper #local_attendance").click(function(){
-                        window.location.href = 'http://localhost:8080/assets/static/takeattendance.html'
-                    })
-                    $("#_alertsuper .negative").click(function(){
-                        $("#_alertsuper").css({"display":'none'});
-                    });
-                }
-            </script>
-        </div>
-        <div class="offline_pop c-vert" style="display: none;">
-            <div class="cont">
-                <div class="slash">!</div>
-                <svg fill="red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M54.2 202.9C123.2 136.7 216.8 96 320 96s196.8 40.7 265.8 106.9c12.8 12.2 33 11.8 45.2-.9s11.8-33-.9-45.2C549.7 79.5 440.4 32 320 32S90.3 79.5 9.8 156.7C-2.9 169-3.3 189.2 8.9 202s32.5 13.2 45.2 .9zM320 256c56.8 0 108.6 21.1 148.2 56c13.3 11.7 33.5 10.4 45.2-2.8s10.4-33.5-2.8-45.2C459.8 219.2 393 192 320 192s-139.8 27.2-190.5 72c-13.3 11.7-14.5 31.9-2.8 45.2s31.9 14.5 45.2 2.8c39.5-34.9 91.3-56 148.2-56zm64 160a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"/></svg>
-            </div>
-            <style>
-                .offline_pop{
-                    position: fixed;
-                    bottom: 10px;
-                    right: 10px;
-                    width: 50px;
-                    height: 50px;
-                    z-index: 10;
-                    box-shadow: 0px 0px 14px 1px grey;
-                    background-color: #e5e5e5;
-                    border-radius: 50%;
-                }
-                .offline_pop .cont{
-                    position: relative;
-                    margin: 0px auto;
-                }
-                .offline_pop .cont .slash{
-                    position: absolute;
-                    color: red;
-                    text-shadow: #fff;
-                }
+            <div class="offline_pop c-vert gelatine bounce" style="display: none;">
+                <div class="cont">
+                    <img src="../static/locals/general/images/nointernet.png" alt="" srcset="">
+                    <div class="slash">No Internet. Click for more options</div>
+                    <div class="mcancel c-vert" style="margin: 0 10px;">
+                        <svg style="height: 12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+                    </div>
+                </div>
+                <style>
+                    .offline_pop{
+                        position: fixed;
+                        top: 20px;
+                        width: 300px;
+                        left: calc(50% - 150px);
+                        padding: 10px;
+                        z-index: 110;
+                        box-shadow: 0px 0px 14px 1px grey;
+                        background-color: #e5e5e5;
+                        border-radius: 20px;
+                    }
+                    .offline_pop .cont{
+                        position: relative;
+                        display: flex;
+                        width: max-content;
+                        margin: 0px auto;
+                    }
+                    .offline_pop .cont img{
+                        height: 20px;
+                        display: block;
+                    }
+                    .offline_pop .cont .slash{
+                        padding: 0px 8px;
+                        text-shadow: #fff;
+                        font-size: 12px;
+                    }
+                    .gelatine {
+                        
+                    }
+                    @keyframes gelatine {
+                        from, to { transform: scale(1, 1); }
+                        25% { transform: scale(0.9, 1.1); }
+                        50% { transform: scale(1.1, 0.9); }
+                        75% { transform: scale(0.95, 1.05); }
+                    }
     
-            </style>
-            <script>
-                $(".offline_pop").click(function(){
-                    offline_options()
-                })
-                function initiate_offline_pop(){
-                    $(".offline_pop").css({'display':'flex'})
-                }
-            </script>
+                </style>
+                <script>
+                    $(".offline_pop").click(function(){
+                        offline_options()
+                    })
+                    $(".offline_pop .mcancel").click(function(){
+                        $(".offline_pop").css({'display':'none'})
+                    })
+                    function initiate_offline_pop(){
+                        $(".offline_pop").css({'display':'flex'})
+                        setTimeout(() => {
+                            $(".offline_pop").css({
+                                "animation": "gelatine 0.5s 2",
+                            })    
+                        }, 2000);
+                    }
+                    
+                    var G_state = true
+                    async function prePromptNetwork(){
+                        let _res = await window.flutter_inappwebview.callHandler("checkCanConnect", []);
+                        promptNetworkChange(_res)
+                    }
+                    function promptNetworkChange(state){
+                        if (state){
+                            G_state = true;
+                            $(".offline_pop").css({'display':'none'})
+                        }
+                        if (state == false && G_state != false){
+                            G_state = false;
+                            initiate_offline_pop();
+
+                        }
+                    }
+                    window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+                        prePromptNetwork()
+                    })
+                </script>
+            </div>
         </div>
 
         <section class="inner flex main-content">
@@ -535,7 +584,7 @@
     <script src="../static/locals/builds/pay/PendingDue_Super.js"></script>
     <script src="../static/locals/builds/attendance/Attendance_Super.js"></script>
     <!-- THE SCRIPT BELOW LOADS THE FORMAT FOR LOADING ALL ATTENDANCES FOR THE INSTRUCTORS -->
-    <script src="../static/locals/builds/attendance/All_AttendanceSuper.js"></script>
+    <!-- <script src="../static/locals/builds/attendance/All_AttendanceSuper.js"></script> -->
 
 </body>
 </html>
