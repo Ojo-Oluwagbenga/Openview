@@ -141,8 +141,7 @@ class _MyInAppState extends State<MyInApp> {
       //   _authorized = 'Authenticating';
       // });
       authenticated = await auth.authenticate(
-        localizedReason:
-            'Scan your fingerprint (or face or whatever) to authenticate',
+        localizedReason: 'Scan your fingerprint (or face) to authenticate',
         options: const AuthenticationOptions(
           stickyAuth: true,
           biometricOnly: true,

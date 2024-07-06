@@ -72,6 +72,9 @@ async function _axios(data){
 
     
 }
+function bluetoothListener(blue_string){
+    alert(blue_string);
+}
 if (!_localStorage.getItem("user_data")){
     // window.location.href = 'http://localhost:8080/assets/static/login.html'
 }
