@@ -1,0 +1,84 @@
+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
+Things that need to be installed
+py -m pip install google-auth
+py -m pip install firebase-admin
+
+twilio safe 6U1BCWEFZ62M2HFB36Q5U37U
+This will not allow
+git init
+git checkout -b branch_name  //This will first set the branch that all add and commits are going.
+git branch -M branchName
+
+cd ../; oneklassenv/Scripts/Activate; cd oneklass_v2
+py -m pip install google-auth     
+
+/home/rider/projects/oneklassenv/bin/python projects/oneklass_v2/main
+
+May need clearing
+git rm -r --cached .
+
+git add <files>
+git commit -m "My Message" 
+may run=> git remote remove origin
+git remote add origin https://github.com/Ojo-Oluwagbenga/Oneklass_v2.git
+
+git pull origin django_branch --allow-unrelated-histories
+git push -u origin django_branch
+git push -f origin master // To ba ni agidi ju
+
+==========================================================
+Dont forget to install daphne as a pre req in channels > 4.x
+to install the freaking stubborn dlib
+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
+ojojohn2907@gmail.com
+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
+yes
+source projects/oneklassenv/bin/activate
+cd projects/oneklass_v2
+sudo chown rider main/migrations
+ojojohn2907@gmail.com
+pip install https://github.com/jloh02/dlib/releases/download/v19.22/dlib-19.22.99-cp310-cp310-win_amd64.whl
+============================================================
+
+python manage.py migrate --fake main zero
+python manage.py migrate main zero
+with the extension you may run "python manage.py reset_db" to clear all 
+
+git add .;git commit -m "General Commit"; git push -u origin main
+
+============PULL===========
+"time": 1711787476.6716743, "func_name": "attendance_queue_prompt",
+git init
+git remote add origin https://github.com/Ojo-Oluwagbenga/Omega_Classmanager.git
+git pull origin django_branch
+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
+
+function mark_in:
+	#accepts the student_face, qrcode, coordinate(lat, long)
+    if the student is not in the group:
+        >>return a marking error; 
+        >>terminate the process;
+    #progress with the execution thread if above is false
+
+    if the qrcode is not a valid one
+        >>return qr error;
+        >>terminate the process;
+    #progress with the execution thread if above is false
+
+    >>read and decrypt data in the qrcode
+    >>fetch the attendance poll associated with the passed qr
+    >>fetch the coordinate of the admin when opening the poll
+
+    if the fetched coordinate is out of radius from the passed coord:
+        >>return out of bound error
+        >>terminate the process
+
+    >>fetch the user pre-registered face from DB
+    if the fetched face does not match passed face:
+        >>return face error
+        >>terminate the process
+
+    >>add user, user_data to list of marked users of the attendance
+
+    return success
+    terminate thread
