@@ -38,8 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   webview_flutter: ^4.4.1
   connectivity_plus: ^4.0.2
-
-
+  
   modal_progress_hud_nsn: ^0.4.0
   permission_handler: ^11.2.0
 
@@ -62,7 +61,20 @@ dependencies:
   geolocator: ^11.0.0
   google_api_availability: ^5.0.0
   http: ^1.2.0
+  flutter_native_splash: ^2.4.1
+  
 
+flutter_native_splash:
+  # android: true
+  # ios: true
+  # web: false
+
+  color: "#1000ff"
+  image: "assets/oaulogo.png"
+  
+  android_12:
+    color: "#ff0000"
+    image: "assets/oaulogo.png"
 
 
 

@@ -5,6 +5,7 @@ import 'package:one_klass/api/firebase_api.dart';
 import 'package:one_klass/firebase_options.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'Screens/splashSreen.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'Screens/logoScreen.dart';
 import 'Screens/popUp.dart';
@@ -56,6 +57,10 @@ Future<void> main() async {
   await localhostServer.start();
   await requestPermissions();
 
+  print("Got to the delay shi");
+  // await Future.delayed(const Duration(seconds: 10));
+  // FlutterNativeSplash.remove();
+
   runApp(const MyApp());
 }
 
@@ -83,12 +88,13 @@ class MyApp extends StatelessWidget {
         title: 'OneKlass',
         theme: ThemeData(
           primaryIconTheme:
-              const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
+              const IconThemeData(color: Color.fromARGB(255, 228, 102, 102)),
           colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromARGB(255, 255, 255, 255)),
           useMaterial3: true,
         ),
-        initialRoute: 'aaa',
+        // initialRoute: 'aaa',
+        initialRoute: 'ar',
         // home: const HomeScreen(),
 
         routes: {

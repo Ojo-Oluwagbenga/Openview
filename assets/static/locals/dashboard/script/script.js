@@ -362,14 +362,6 @@ $(document).ready(function(){
         // location.reload(true)
     })
 
-    $(".foot .attendance").click(function(){
-        if (__last_active_poll_path == ''){
-            popAlert("You have no active attendance")
-        }else{
-            window.location.href = __last_active_poll_path;
-        }
-    })
-
     $(".db-logout").click(function(){
         confirmChoice({
             head:"Log Out",

@@ -131,7 +131,7 @@ button{
         overflow-y: scroll;
         padding: 10px;
         position: relative;
-        font-size: 14px;
+        font-size: 12px;
     }
     .nav-tab .super-hold .cancel{
         position: absolute;
@@ -202,6 +202,55 @@ button{
         margin-right: 10px;
     }
 
+
+    .foot{
+      background-color: whitesmoke;
+      position: fixed;
+      bottom: 0px;
+      border-top: 1px solid #c9c9c9;
+      width: 100%;
+      height: 50px;
+      z-index: 11;
+  }
+  .foot .icon-flex{
+      display: flex;
+      flex-wrap:wrap;
+      align-items: center;
+      padding:10px;
+      justify-content:space-around
+  }
+
+  .foot .icon-flex .s-hold{
+      padding: 7px 15px;
+      border-radius: 10px;
+  }
+
+  .icon-flex svg{
+      width: 1.5rem;
+      fill: grey;
+  }
+  .icon-flex ._attendance{
+      position: relative;
+  }
+  .icon-flex ._attendance .notice{
+      position: absolute;
+      height: 10px;
+      display: none;
+      width: 10px;
+      border-radius: 50%;
+      top: 0;
+      right: calc(50% - 14px);
+      animation-name: opacity_switch;
+      animation-duration: 1s;
+      background-color: red;
+      animation-iteration-count: 5;
+  }
+  @keyframes opacity_switch {
+      0%   {opacity:0;}
+      50%   {opacity:1;}
+      100% {opacity:0;}
+  }
+
   @media screen and (min-width: 600px) {
     section.nav-tab{
         opacity: 1;
@@ -219,4 +268,27 @@ button{
         display: none;
     }
     
+  }
+
+  .loader {
+    border: 2px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 2px solid #3498db;
+    width: 10px;
+    position: absolute;
+    height: 10px;
+    margin: 3px 1px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }

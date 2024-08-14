@@ -49,7 +49,7 @@ class _localStorage {
 }
 async function _axios(data){
     
-    let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
+    let base_url = __live_origin +"/" + data.url
     // let base_url = "http://192.168.207.172:8000/" + data.url
     data.data['platform'] = 'mobile'
 
@@ -58,8 +58,6 @@ async function _axios(data){
             "requestName":"req_name",
             "data":data.data,
             "url": base_url,
-            // "base_url":'oneklass2.oauife.edu.ng',
-            // "route":'api/open/class/fetch',
             "protocol":'https',
             "method":data.method,
         }
@@ -79,6 +77,8 @@ if (!_localStorage.getItem("user_data")){
     // window.location.href = 'http://localhost:8080/assets/static/login.html'
 }
 
+__live_origin = 'https://oneklass2.oauife.edu.ng';
+__last_active_poll_path=''
 let __user_data = JSON.parse(_localStorage.getItem("user_data"));
 
 async function _writeallcachetolocalstorage(){
@@ -101,8 +101,6 @@ try {
         _writeallcachetolocalstorage()
     })
 } catch (error) {}
-
-let origin = 'https://oneklass2.oauife.edu.ng'
 
 function _run_fly_changes(){
     communicator('fetchCache', ['fly_changes'], (ret)=>{
@@ -157,6 +155,31 @@ $(document).ready(function(){
     
     }
     pageSetup();
+
+    $("#page-back-button").click(()=>{
+        history.back();
+    })
+    $("footer ._dashboard").click(()=>{
+        if (localStorage.getItem("platform") == 'web'){
+            window.location.href = window.location.origin + "/dashboard"
+        }else{
+            window.location.href = 'http://localhost:8080/assets/static/dashboard.html'
+        }
+    })
+    $("footer ._attendance").click(function(){
+        if (__last_active_poll_path == ''){
+            popAlert("You have no active attendance")
+        }else{
+            window.location.href = __last_active_poll_path;
+        }
+    })
+    $("footer ._account").click(()=>{
+        if (localStorage.getItem("platform") == 'web'){
+            window.location.href = window.location.origin + "/account"
+        }else{
+            window.location.href = 'http://localhost:8080/assets/static/account.html'
+        }
+    })
     
     $(".nav-item").click(function(){
         let redir = $(this).attr('redir');
@@ -173,7 +196,7 @@ $(document).ready(function(){
                 return
     
             }
-            window.location.href = origin + redir;
+            window.location.href = __live_origin + redir;
         }
     })
     

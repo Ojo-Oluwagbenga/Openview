@@ -26,9 +26,8 @@
     <main class="page flex">
         <script>
             page__is_dashboard=true;
-            __last_active_poll_path='';
-           
-        </script>
+            __to_be_loaded = {}
+        </script>   
 
         <div class="popalertBox">
             <style>
@@ -211,7 +210,13 @@
                         })
                         $("#_alertsuper .negative").click(function(){
                             $("#_alertsuper").css({"display":'none'});
+                            setTimeout(() => {
+                                $(".offline_pop").css({
+                                    "animation": "gelatine 0.5s 2",
+                                })    
+                            }, 2000);
                         });
+                        
                     }
                 </script>
             </div>
@@ -270,11 +275,8 @@
                     })
                     function initiate_offline_pop(){
                         $(".offline_pop").css({'display':'flex'})
-                        setTimeout(() => {
-                            $(".offline_pop").css({
-                                "animation": "gelatine 0.5s 2",
-                            })    
-                        }, 2000);
+                        offline_options()
+                        
                     }
                     
                     var G_state = true
@@ -286,6 +288,9 @@
                         if (state){
                             G_state = true;
                             $(".offline_pop").css({'display':'none'})
+                            for (const key in __to_be_loaded) {
+                                __to_be_loaded[key]()
+                            }
                         }
                         if (state == false && G_state != false){
                             G_state = false;
@@ -299,6 +304,306 @@
                 </script>
             </div>
         </div>
+        <div class="profileEdit-super dataCollect"   id="dataCollect" style="display: none;">
+            <div class="profileEdit">
+                <div class="head">Edit Profile</div>
+                <div class="head-text"> amet eius at temporibus obcaecati porro deserunt!</div>
+    
+                <div class="entries-hold">
+                    <div class="entries">
+                        <div class="">Password</div>
+                        <input type="text" value="" placeholder="Enter New Password">
+                        <div class="collect_floater">
+                            <div class="cf_entry">Entry 1</div>
+                            <div class="cf_entry">Entry 1</div>
+                        </div>
+                    </div>
+                    <div class="entries">
+                        <div class="">Password</div>
+                        <input type="text" value="" placeholder="Enter New Password">
+                    </div>
+                    <div class="entries">
+                        <div class="">Password</div>
+                        <input type="text" value="" placeholder="Enter New Password">
+                    </div>
+                </div>
+    
+    
+                <div class="action">
+                    <div class="cancel">Cancel</div>
+                    <div class="proceed">Proceed</div>
+                </div>
+            </div>
+            <style>
+                .dataCollect.profileEdit-super{
+                    position: fixed;
+                    top: 0px;
+                    left: 0px;
+                    z-index: 201;
+                    width: 100%;
+                    height: 100vh;
+                    padding: 20px 0;
+                    overflow-y: scroll;
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    backdrop-filter: blur(10px);
+                }
+                .dataCollect .profileEdit{
+                    position: relative;
+                    margin: 20px 0;
+                    align-self: center;
+                    width: 80%;
+                    padding: 15px;
+                    margin: 0px auto;
+                    max-width: 300px;
+                    border-radius: 10px;
+                    box-shadow: 0px 0px 36px -12px grey;
+                    background-color: #f5f5f5;
+                }
+                .dataCollect .entries{
+                    margin: 10px 0;
+                    position: relative;
+                }
+                .dataCollect .entries .keyname{
+                    padding: 4px 0;
+                    font-size: 13px;
+                }
+                .dataCollect .entries .collect_floater{
+                    position: absolute;
+                    top: calc(100% + 5px);
+                    background-color: white;
+                    border-radius: 5px;
+                    padding: 10px;
+                    width: 100%;
+                    z-index: 2;
+                    max-height: 150px;
+                    overflow-y: scroll;
+                    /* box-shadow: 0px -11px 23px 1px #0000009e; */
+                    box-shadow: 0px 4px 15px -5px #0000009e;
+                }
+                .dataCollect .entries .collect_floater .cf_entry{
+                    padding: 5px 10px;
+                    background-color: whitesmoke;
+                    border-radius: 3px;
+                    margin-bottom: 5px;
+                    font-size: 12px;
+                }
+                .profileEdit > .head{
+                    padding-bottom: 5px;
+                    border-bottom: 1px dashed grey;
+                }
+                .profileEdit >.head-text{
+                    padding: 10px 0;
+                    font-size: 14px;
+                    color: grey;
+                }
+    
+                .profileEdit .head{
+                    text-align: center;
+                    font-weight: bold;
+                }
+                .profileEdit .entries-hold{
+                    padding: 5px 0;
+                    margin: 10px 0;
+                    font-size: 14px;
+                }
+                .profileEdit .entries-hold textarea{
+                    width: 100%;
+                    height: 120px;
+                    padding: 10px;
+                    border: none;
+                    outline: none;
+                    border-radius: 5px;
+    
+                }
+    
+    
+                .profileEdit .entries-hold .head{
+                    text-align: left;
+                    padding: 5px 0;
+                }
+                .entries-hold input{
+                    border: none;
+                    border-radius: 6px;
+                    background-color: white;
+                    outline: none;
+                    padding: 10px;
+                    width: 100%;
+                }
+                .entries-hold.last{
+                    border-top: 1px dashed grey;
+                    padding-top: 20px;
+                }
+                .profileEdit .action{
+                    width: calc(100% - 10px);
+                    margin: 5px 0;
+                    color: white;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                .profileEdit .action div.cancel{
+                    background-color: whitesmoke;
+                    color: black;
+                }
+    
+    
+                .profileEdit .action > :nth-child(n){
+                    cursor: pointer;
+                    padding: 5px;
+                    font-size: 14px;
+                    color: black;
+                    font-weight: bold;
+                    margin-top: 15px;
+                    width: 30%;
+                    text-align: center;
+                    border-radius: 4px;
+                }
+    
+            </style>
+            <script>
+                function dataCollect(data){
+                    // data = {
+                    //         entryset:[
+                    //             {name:"Email", required:true, keyname:"email", 'placeholder':"the placeholder"},
+                    //             {name:"Name", required:false, keyname:"name"},
+                    //         ],
+                    //         positiveCallback:()=>{},
+                    //         negativeCallback:()=>{},
+                    //         head:"The head",
+                    //         headtext:"The freaking text that shoulkd be on the head",
+    
+                    // }
+    
+                    let app_str = '';
+                    for (let i = 0; i < data.entryset.length; i++) {
+                        const entry = data.entryset[i];
+                        let req = entry.required ? "required" : "non"
+                        app_str += `<div class="entries" key="${entry.keyname}" class="${i}" reqstat="${req}">
+                            <div class="keyname">${entry.name}</div>
+                            <input type="${entry.type}" autocomplete="new-password" placeholder="${entry.placeholder?entry.placeholder:"Enter value here"}">
+                        </div>`;
+                    }
+    
+                    $("#dataCollect .entries-hold").html(app_str);
+                    for (let i = 0; i < data.entryset.length; i++) {
+                        const entry = data.entryset[i];
+                        if (entry.option_pairs){
+                            $("#dataCollect .entries[key="+entry.keyname+"] input").on('focus', function(){
+                                $("#dataCollect .entries[key="+entry.keyname+"]").append()
+                                collect_bfs("#dataCollect .entries[key="+entry.keyname+"]", 
+                                            "#dataCollect .entries[key="+entry.keyname+"] input",
+                                            entry.option_pairs, null, entry.click_callback
+                                )
+                            })
+                            $("#dataCollect .entries[key="+entry.keyname+"] input").blur(function(){
+                                setTimeout(() => {
+                                    $(".collect_floater").remove()
+                                }, 300);
+                                
+                            })
+                        }
+                    }
+                    $("#dataCollect").css({display:"flex"});
+                    $("#dataCollect .profileEdit > .head").html(data.head);
+    
+                    if (data.headtext){
+                        $("#dataCollect .profileEdit > .head-text").html(data.headtext).css("display", "block");
+                    }else{
+                        $("#dataCollect .profileEdit > .head-text").text("").css("display", "none");
+                    }
+                    $("#dataCollect .action > div").unbind("click");
+                    $("#dataCollect .proceed").click(() => {
+                        let isnotin = false;
+                        let isnotin_name = '';
+                        let retData = {}
+                        $("#dataCollect .entries").each(function(){
+                            let rqd_val = $(this).find("input").val();
+    
+                            if ($(this).attr("reqstat") == 'required'){
+                                if (!isnotin){
+                                    isnotin = rqd_val == "";
+                                    isnotin_name =  $(this).find(".keyname").text()
+                                }
+                            }
+                            retData[$(this).attr("key")] = rqd_val
+    
+                        });
+                        if (isnotin){
+                            popAlert(isnotin_name + " is required!");
+                            return
+                        }
+                        $("#dataCollect").css({display:"none"});
+                        data.positiveCallback(retData);
+                    });
+                    $("#dataCollect .cancel").click(function(){
+                        $("#dataCollect").css({display:"none"});
+                        data.negativeCallback();
+                    })
+    
+                }
+                
+                function collect_bfs(parent, collector, pairs, _default, click_callback){  //COLLECTOR'S BUILD FLOAT AND SEARCH FUNC.
+                    //THIS WILL BUILD THE ELEMENT OBJECT WITH "PAIRS" AND LOAD IT UP IN THE "PARENT"
+                    //_default is the key:value pair for when the search text is not found
+                    //CLICK CALL BACK IS CALLED WHEN ANY SEARCH RESULT IS CLICKED
+                    if (!_default){
+                        _default = {"text":""}
+                    }
+                    let str = `<div class="collect_floater">
+                        ${Object.keys(pairs).map(key=>{
+                            return `<div class="cf_entry normal" key="${key}">${key}</div>`
+                        }).join("")}
+                        ${`<div class="cf_entry default" style="display:none">${_default['text']}</div>`}
+                    </div>`;
+                    $(parent).append(str)
+                    
+                    let searchFunc = (text)=>{
+                        var rgxp = new RegExp(text, "gi");
+                        let found = false;
+                        Object.keys(pairs).map(function(key){
+                            let ktxt =  key+ " - "+ pairs[key]
+                            if (ktxt.match(rgxp) !== null){
+                                found = true
+                                $(`.collect_floater .cf_entry[key='${key}']`).css("display", "block");
+                            }else{
+                                $(`.collect_floater .cf_entry[key='${key}']`).css("display", "none");
+                            }
+                        });
+                        if (!found){
+                            //IF NOTHING IS FOUND, IT WILL hide the pallet
+                            $(`.collect_floater`).css("display", "none");
+                        }else{
+                            $(`.collect_floater`).css("display", "block");
+                        }   
+                    }
+                    //REMOVE ALL LISTENING FUNCTION
+                    $(collector).unbind('input')
+                    //LISTEN FOR WHEN AN INPUT WILL BE MADE IN THE INPUT BOX
+                    $(collector).on('input', function() {
+                        let text = $(this).val()        
+                        $(collector).attr("key", "_null_");
+                        searchFunc(text);
+                    });
+                    searchFunc($(collector).val())
+                    
+                    $(".collect_floater .cf_entry.normal").click(function(){
+                        //THIS IS TO REMOVE THE FLOAT WHEN A CHILD IS CLICKED
+                        let key = $(this).attr('key');
+                        let val = $(this).text();
+                        $(collector).val(val).attr("key", key);
+                        $(parent + " .collect_floater").remove()
+                        click_callback(val)
+                    })
+                    $(".collect_floater .cf_entry.default").click(function(){
+                        _default['callback']();
+                        $(parent + " .collect_floater").remove()
+                    })
+                    
+                }
+            </script>
+        </div>
 
         <section class="inner flex main-content">
             <section class="subhold">
@@ -308,7 +613,7 @@
                         <div class="m-item c-vert _menu" style="margin-right: 10px;">
                             <svg style="height: 16px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
                         </div>
-                        <b item="name" class="__to_load" style="font-size: 18px;">---</b>
+                        <b item="name" class="__to_load" style="font-size: 15px;color: #7a7a7a;">---</b>
                             <!-- <b class="__to_load" item="name">--</b> -->
                         
                         <!-- <p class="low">Have a nice day</p> -->
@@ -561,17 +866,17 @@
 
         <footer class="foot">
             <div class="icon-flex">
-                <div class="c-vert s-hold">
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg> -->
-                    <svg xmlns="http://www.w3.org/2000/svg" style="height:16px; fill: #282828;" viewBox="0 0 576 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c.2 35.5-28.5 64.3-64 64.3H128.1c-35.3 0-64-28.7-64-64V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24zM352 224a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zm-96 96c-44.2 0-80 35.8-80 80c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16c0-44.2-35.8-80-80-80H256z"/></svg>
+                <div class="_dashboard c-vert s-hold">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="height:16px; fill: #282828;" viewBox="0 0 576 512"><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c.2 35.5-28.5 64.3-64 64.3H128.1c-35.3 0-64-28.7-64-64V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24zM352 224a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zm-96 96c-44.2 0-80 35.8-80 80c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16c0-44.2-35.8-80-80-80H256z"/></svg>
                 </div>
                 
-                <div class="attendance c-vert s-hold">
+                <div class="_attendance c-vert s-hold">
                     <svg xmlns="http://www.w3.org/2000/svg" style="height:16px;"  viewBox="0 0 384 512"><path d="M192 0c-41.8 0-77.4 26.7-90.5 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H282.5C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16z"/></svg>
                     <div class="notice"></div>
                 </div>
-                <div class="c-vert s-hold nav-item" redir="./account">
+                <div class="_account c-vert s-hold">
                     <svg xmlns="http://www.w3.org/2000/svg"  style="height:16px;"   viewBox="0 0 512 512"><!-- --><path d="M256 112c-48.6 0-88 39.4-88 88C168 248.6 207.4 288 256 288s88-39.4 88-88C344 151.4 304.6 112 256 112zM256 240c-22.06 0-40-17.95-40-40C216 177.9 233.9 160 256 160s40 17.94 40 40C296 222.1 278.1 240 256 240zM256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-46.73 0-89.76-15.68-124.5-41.79C148.8 389 182.4 368 220.2 368h71.69c37.75 0 71.31 21.01 88.68 54.21C345.8 448.3 302.7 464 256 464zM416.2 388.5C389.2 346.3 343.2 320 291.8 320H220.2c-51.36 0-97.35 26.25-124.4 68.48C65.96 352.5 48 306.3 48 256c0-114.7 93.31-208 208-208s208 93.31 208 208C464 306.3 446 352.5 416.2 388.5z"/></svg></div>
+                
             </div>
         </footer>
 
