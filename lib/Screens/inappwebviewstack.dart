@@ -90,12 +90,7 @@ class _MyInAppState extends State<MyInApp> {
 
     Future<String> name = FlutterBluePlus.adapterName;
 
-    print("hhhhhhhhhhhhhhhhhhhhhhh");
-    print(name);
-
     stateSubscription = FlutterBluePlus.adapterState.listen((state) {
-      print("Adapter state: $state");
-
       // Handle different states accordingly
       if (state == BluetoothAdapterState.on) {
         setState(() {
@@ -122,11 +117,8 @@ class _MyInAppState extends State<MyInApp> {
         setState(() {
           discoveredDevices[event.address] = {"name": event.name, "rssi": 0};
         });
-        print("cooooodeeeeeeeeeeeeeeeeeeee");
         discoveredDevices = discoveredDevices;
         print(discoveredDevices);
-
-        print("cooooodeeeeeeeeeeeeeeeeeee");
       },
     );
   }
@@ -148,7 +140,6 @@ class _MyInAppState extends State<MyInApp> {
         ),
       );
 
-      print(authenticated);
       setState(() {});
     } on PlatformException catch (e) {
       print(e);
@@ -305,7 +296,7 @@ class _MyInAppState extends State<MyInApp> {
             },
             initialOptions: InAppWebViewGroupOptions(
               crossPlatform: InAppWebViewOptions(
-                  cacheEnabled: false,
+                  cacheEnabled: true,
                   mediaPlaybackRequiresUserGesture: false,
                   useOnDownloadStart: true,
                   javaScriptEnabled: true,
