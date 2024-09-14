@@ -77,6 +77,22 @@ if (!_localStorage.getItem("user_data")){
     // window.location.href = 'http://localhost:8080/assets/static/login.html'
 }
 
+function preload(link, pagetype="", headvalue="Page Loading..."){
+    let redir = encodeURIComponent(link)
+    if (pagetype == 'payout'){
+        alert("Entering payout")
+        window.location.href = `http://localhost:8080/assets/static/preloads/payout.html?redir=${redir}`; 
+        return
+    }
+    if (pagetype == 'initiateattendance'){
+        window.location.href = `http://localhost:8080/assets/static/preloads/initiateattendance.html?redir=${redir}`; 
+        return
+    }
+    if (pagetype == ""){
+        window.location.href =  `http://localhost:8080/assets/static/preloads/generalpreload.html?headvalue=${headvalue}&redir=${redir}`;
+    }
+}
+
 __live_origin = 'https://oneklass2.oauife.edu.ng';
 __last_active_poll_path=''
 let __user_data = JSON.parse(_localStorage.getItem("user_data"));

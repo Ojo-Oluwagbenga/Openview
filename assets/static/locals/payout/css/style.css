@@ -1,0 +1,292 @@
+
+body, html{
+    scroll-behavior: smooth;
+}
+.content-area{ 
+    display: flex;
+    justify-content: space-around;
+}
+.top-nav{
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+}
+
+.editsuper{
+    width: 65%;
+    background-size: 4px 4px;
+    box-shadow: -2px 0px 15px 10px grey;
+    overflow-y: scroll;
+    background-repeat:repeat;
+    padding: 10px;
+}
+
+.gallerysuper{
+    height: 55vh;
+    width: 100%;
+    position: relative;
+    /* box-shadow: 2px 0px 17px -3px #d1b0b0; */
+}
+.gallerysuper .slideitemhold{
+    height: 90%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+.gallerysuper .slideitem{
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    background-color:whitesmoke;
+    border-radius: 10px;
+    transition: transform 0.3s ease, height 0.4s ease, width 0.3s ease, top 0.5s ease;
+    opacity: 1;
+    box-shadow: 0px 0px 3px rgb(199, 185, 185);
+    margin-left: 10%;
+}
+.gallerysuper .slideitem img{
+    width: 100%; 
+    height:100%; 
+    object-fit:contain
+}
+.gallerysuper .sliderhold{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    left: 0px;
+    top: 0px;
+    overflow-x: scroll;
+}       
+
+.gallerysuper .control-hold-abs{
+    position: absolute;
+}    
+.sliderhold .slider{
+    width: 200%;
+    background-color: white;
+    height: 100%;
+    opacity: 0;
+}
+.gallerysuper .s-control{
+    position: absolute;
+    z-index: 2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(105, 103, 103, 0.74);
+    text-align: center;
+    bottom: 20px;
+    transition: all 0.3s;
+}
+.gallerysuper .dir{
+    width: 30px;
+}
+.gallerysuper .s-control:hover{
+    background-color: rgb(43, 41, 41);
+}
+.gallerysuper .s-control svg{
+    height: 16px;
+    fill: white;
+}
+
+.gallerysuper .left{
+    left: 20px;
+}
+.gallerysuper .right{
+    right: 20px;
+}
+.gallerysuper .enlarge{
+    right: calc(50% - 15px);
+    z-index: 2;
+}
+
+div#itembiosuper{
+    position: fixed;
+    top: 75vh;
+    height: 25vh;
+    z-index: 3;
+    width: 100%;
+    bottom: 0vh;
+    background-color: whitesmoke;
+    border-radius: 30px 30px 0px 0px;
+    box-shadow: 0px 0px 20px 0px rgb(158, 158, 158);
+    transition: all 0.3s ease-in;
+}
+.itembio{
+    position: relative;
+    height: 100%;
+    padding: 10px;
+    z-index: 200;
+    padding-top: 25px;
+}
+
+.swipe-control{
+    position: absolute;
+    top: -48px;
+    right: 10px;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    background-color: #000000ba;
+    border-radius: 50%;
+    transition: transform 0.2s ease-in;
+}
+
+.topline{
+    width: 60px;
+    height: 5px;
+    top: 10px;
+    left: calc(50% - 30px);
+    position: absolute;
+    border-radius: 4px;
+    background-color: grey;
+}
+.itembiosuper .topline{
+    box-shadow: unset !important;
+}
+
+.itembio .innerscroll{
+    height: 100%;
+    display: flex;
+    z-index: 200;
+    flex-direction: column;
+    overflow-y: scroll !important;
+    margin-top:unset !important;
+    padding-bottom: 70px !important;
+}
+.otherpays{
+    margin-top: 20px;
+    padding: 10px;
+}
+.otherpays .head{
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 0;
+}
+.otherpays .pending-head{
+    display: none;
+}
+.otherpays .box-row{
+    display: block;
+    overflow-x:hidden;
+}
+
+
+.otherpays .box{
+    width: 100%;
+    margin-bottom: 10px !important;
+}
+.otherpays .join_new_channel{
+    margin-top: 10px !important;
+}
+
+
+.product-super{
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    background-color: whitesmoke;
+}
+.product-super h2{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+.product-super .prod-image-hold{
+    position: fixed;
+    top: 80px;
+    overflow: hidden;
+    z-index: 0;       
+    width: 100%;        
+}
+.product-super .name-price{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.product-super .action-super{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+}
+.action-super .addtocart{
+    display: flex;
+    align-items: end;
+    width: 40%;
+    max-width: 200px;
+    align-self: flex-end;
+    justify-content: center;
+    padding: 10px;
+    font-size: 12px;
+    min-width: unset;
+    border-radius: 30px;
+    color: white;
+    background-color: rgb(113 29 216);
+    cursor: pointer;
+    margin-left: 10px;
+}
+.product-super .bio{
+    padding: 10px 9px;
+    display: flex;
+    width: 95%;
+    border-radius: 6px;
+    background-color: white;
+    margin: 10px auto;
+}
+.product-super .bio .value{
+    font-weight: normal;
+    margin: 0px 10px;
+}
+.product-super .deadline_data{
+    font-size: 14px;
+}
+
+
+.product-super div.description{
+    display: block;
+    background-color: unset;
+}
+.product-super div.description .head{
+    font-weight: bold;
+}
+
+.description .body{
+    padding: 10px; 
+    font-size: 13px;
+    color: rgb(87, 87, 87);
+}
+.product-super .variation{
+    padding: 10px;
+}
+.variation .vartitle{
+    font-weight: bold;
+    padding: 10px 0;
+}
+.variation .varpack{
+    display: flex;
+}
+.variation .varpack .var{
+    height: 40px;
+    width: 40px;
+    background-color: yellow;
+    border-radius: 100%;
+    margin: 0px 10px;
+}
+.product-super .reviews{
+    padding:10px;
+}
+
+
+
+
+@media screen and (min-width: 600px) {
+    .product-super .prod-image-hold{
+        width: calc(100% - 275px);
+    }
+    div#itembiosuper{
+        width: calc(100% - 275px);
+    }
+    
+  }

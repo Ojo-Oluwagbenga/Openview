@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../static/locals/general/css/utils.css">
+    <link rel="stylesheet" href="../../static/locals/payout/css/style.css">
+
+    <script src="../../static/locals/general/script/jquery.js"></script>
+    
+    <link rel="stylesheet" href="../../static/locals/takeattendance/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../../static/locals/general/script/communicator.js"></script>   
+
+</head>
+<body>
+    <div class="popalertBox">
+        <style>
+            .popalertBox{
+                position: fixed;
+                width: 100vw;
+                bottom: 60px;
+                display: none;
+                z-index: 220;
+            }
+            .popalertBox .mypop{
+                width: max-content;
+                max-width: 90%;
+                margin: 0px auto;
+                padding: 10px 20px;
+                border-radius: 10px;
+                background-color: #343434;
+                transition: opacity 0.3s ease-in;
+                color: white;
+                font-weight: normal;
+                font-family: 'Roboto Condensed', sans-serif;
+                font-size: 14px;
+                letter-spacing: 0.5px;
+                opacity:1;
+            }
+        </style>
+        <div class="mypop"></div>
+        <script>
+            function popAlert(text, live_on){
+                $(".popalertBox").css('display', 'block');
+                $(".popalertBox .mypop").css('opacity', '1').html(text);
+                if (typeof(popSuper) != 'undefined'){
+                    clearTimeout(popSuper)
+                }
+               
+
+                if (!live_on){
+                    
+                    popSuper = setTimeout(() => {
+                        $(".popalertBox .mypop").css('opacity', '0');
+                        setTimeout(() => {
+                            $(".popalertBox").css('display', 'none');
+                        }, 400);
+                    }, 2000);
+                }else{
+                    let obj = {
+                        kill:()=>{
+                            $(".popalertBox .mypop").css('opacity', '0');
+                            $(".popalertBox").css('display', 'none');
+                        },
+                        text:(text)=>{
+                            $(".popalertBox .mypop").css('opacity', '1').html(text);
+                        }
+                    }
+                    return obj
+                }
+            }
+        </script>
+    </div>
+
+    <div class="alertsuper" id="alertsuper" style="display: none;">
+        <div class="alertbox">
+            <div class="head">head</div>
+            <div class="text">Text</div>
+            <div class="but-hold">
+                <div class="actions negative" >Cancel</div>
+                <div class="actions positive">Proceed</div>
+            </div>
+        </div>
+        <style>
+            .alertsuper{
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                z-index: 10;
+                width: 100%;
+                height: 100vh;                   
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                backdrop-filter: blur(10px) 
+            }
+
+            .alertbox{      
+                position: relative;
+                top: -5%;              
+                width: 80%;
+                padding: 10px;
+                margin: 0px auto;
+                max-height: 70vh;
+                overflow-y: scroll;
+                max-width: 300px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 36px -12px grey;
+                background-color: #f5f5f5e8;
+                backdrop-filter: blur(10px);
+            }
+            .alertbox .head{
+                font-weight: bold;
+                text-align: center;
+                padding: 10px 0px;
+                border-bottom: 1px solid grey;
+            }    
+            .alertbox .text{
+                padding: 20px 10px;
+                font-size: 15px;
+            }
+            .alertbox .but-hold{
+                display: flex;
+                justify-content: space-around;
+            }
+            .alertbox .but-hold > :nth-child(n){
+                padding: 10px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: bold;
+                background-color: #f5f5f542;
+                border-radius: 10px;
+            }
+        </style>
+        <script>
+            function confirmChoice(data){
+                // data = {
+                    //     head:"Headtect",
+                    //     text:text,
+                    //     postiveCallback:func,
+                    //     negativeCallback:func
+                // }
+                
+                $("#alertsuper").css({"display":'flex'});
+                $("#alertsuper .head").text(data.head);
+                $("#alertsuper .text").html(data.text);
+                
+                $("#alertsuper .actions").unbind("click");
+                $("#alertsuper .positive").click(() => {
+                    $("#alertsuper").css({"display":'none'});
+                    data.positiveCallback()
+                });
+                $("#alertsuper .negative").click(function(){
+                    $("#alertsuper").css({"display":'none'});
+                    data.negativeCallback();                    
+                });
+            }
+        </script>
+    </div>  
+
+    <div class="profileEdit-super dataCollect"   id="dataCollect" style="display: none;">
+        <div class="profileEdit">
+            <div class="head">Edit Profile</div>
+            <div class="head-text"> amet eius at temporibus obcaecati porro deserunt!</div>
+
+            <div class="entries-hold">
+                <div class="entries">
+                    <div class="">Password</div>
+                    <input type="text" value="" placeholder="Enter New Password">
+                    <div class="collect_floater">
+                        <div class="cf_entry">Entry 1</div>
+                        <div class="cf_entry">Entry 1</div>
+                    </div>
+                </div>
+                <div class="entries">
+                    <div class="">Password</div>
+                    <input type="text" value="" placeholder="Enter New Password">
+                </div>
+                <div class="entries">
+                    <div class="">Password</div>
+                    <input type="text" value="" placeholder="Enter New Password">
+                </div>
+            </div>
+
+
+            <div class="action">
+                <div class="cancel">Cancel</div>
+                <div class="proceed">Proceed</div>
+            </div>
+        </div>
+        <style>
+            .dataCollect.profileEdit-super{
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                z-index: 5;
+                width: 100%;
+                height: 100vh;
+                padding: 20px 0;
+                overflow-y: scroll;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                backdrop-filter: blur(10px);
+            }
+            .dataCollect .profileEdit{
+                position: relative;
+                margin: 20px 0;
+                align-self: center;
+                width: 80%;
+                padding: 15px;
+                margin: 0px auto;
+                max-width: 300px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 36px -12px grey;
+                background-color: #f5f5f5;
+            }
+            .dataCollect .entries{
+                margin: 10px 0;
+                position: relative;
+            }
+            .dataCollect .entries .keyname{
+                padding: 4px 0;
+                font-size: 13px;
+            }
+            .dataCollect .entries .collect_floater{
+                position: absolute;
+                top: calc(100% + 10px);
+                background-color: white;
+                border-radius: 5px;
+                padding: 10px;
+                width: 100%;
+                z-index: 2;
+                max-height: 150px;
+                overflow-y: scroll;
+                box-shadow: 0px 4px 15px -5px #0000009e;
+            }
+            .dataCollect .entries .collect_floater .cf_entry{
+                padding: 5px 10px;
+                background-color: whitesmoke;
+                border-radius: 3px;
+                margin-bottom: 5px;
+                font-size: 12px;
+            }
+            .profileEdit > .head{
+                padding-bottom: 5px;
+                border-bottom: 1px dashed grey;
+            }
+            .profileEdit >.head-text{
+                padding: 10px 0;
+                font-size: 14px;
+                color: grey;
+            }
+
+            .profileEdit .head{
+                text-align: center;
+                font-weight: bold;
+            }
+            .profileEdit .entries-hold{
+                padding: 5px 0;
+                margin: 10px 0;
+                font-size: 14px;
+            }
+            .profileEdit .entries-hold textarea{
+                width: 100%;
+                height: 120px;
+                padding: 10px;
+                border: none;
+                outline: none;
+                border-radius: 5px;
+
+            }
+
+
+            .profileEdit .entries-hold .head{
+                text-align: left;
+                padding: 5px 0;
+            }
+            .entries-hold input{
+                border: none;
+                border-radius: 6px;
+                background-color: white;
+                outline: none;
+                padding: 10px;
+                width: 100%;
+            }
+            .entries-hold.last{
+                border-top: 1px dashed grey;
+                padding-top: 20px;
+            }
+            .profileEdit .action{
+                width: calc(100% - 10px);
+                margin: 5px 0;
+                color: white;
+                cursor: pointer;
+                display: flex;
+                justify-content: flex-end;
+            }
+            .profileEdit .action div.cancel{
+                background-color: whitesmoke;
+                color: black;
+            }
+
+
+            .profileEdit .action > :nth-child(n){
+                cursor: pointer;
+                padding: 5px;
+                font-size: 14px;
+                color: black;
+                font-weight: bold;
+                margin-top: 15px;
+                width: 30%;
+                text-align: center;
+                border-radius: 4px;
+            }
+
+        </style>
+        <script>
+            function dataCollect(data){
+                // data = {
+                //         entryset:[
+                //             {name:"Email", required:true, keyname:"email", 'placeholder':"the placeholder"},
+                //             {name:"Name", required:false, keyname:"name"},
+                //         ],
+                //         positiveCallback:()=>{},
+                //         negativeCallback:()=>{},
+                //         head:"The head",
+                //         headtext:"The freaking text that shoulkd be on the head",
+
+                // }
+
+                let app_str = '';
+                for (let i = 0; i < data.entryset.length; i++) {
+                    const entry = data.entryset[i];
+                    let req = entry.required ? "required" : "non"
+                    app_str += `<div class="entries" key="${entry.keyname}" class="${i}" reqstat="${req}">
+                        <div class="keyname">${entry.name}</div>
+                        <input type="${entry.type}" autocomplete="new-password" placeholder="${entry.placeholder?entry.placeholder:"Enter value here"}">
+                    </div>`;
+                }
+
+                $("#dataCollect .entries-hold").html(app_str);
+                for (let i = 0; i < data.entryset.length; i++) {
+                    const entry = data.entryset[i];
+                    if (entry.option_pairs){
+                        $("#dataCollect .entries[key="+entry.keyname+"] input").on('focus', function(){
+                            $("#dataCollect .entries[key="+entry.keyname+"]").append()
+                            collect_bfs("#dataCollect .entries[key="+entry.keyname+"]", 
+                                        "#dataCollect .entries[key="+entry.keyname+"] input",
+                                        entry.option_pairs, null, entry.click_callback
+                            )
+                        })
+                        $("#dataCollect .entries[key="+entry.keyname+"] input").blur(function(){
+                            setTimeout(() => {
+                                $(".collect_floater").remove()
+                            }, 300);
+                            
+                        })
+                    }
+                }
+                $("#dataCollect").css({display:"flex"});
+                $("#dataCollect .profileEdit > .head").html(data.head);
+
+                if (data.headtext){
+                    $("#dataCollect .profileEdit > .head-text").html(data.headtext).css("display", "block");
+                }else{
+                    $("#dataCollect .profileEdit > .head-text").text("").css("display", "none");
+                }
+                $("#dataCollect .action > div").unbind("click");
+                $("#dataCollect .proceed").click(() => {
+                    let isnotin = false;
+                    let isnotin_name = '';
+                    let retData = {}
+                    $("#dataCollect .entries").each(function(){
+                        let rqd_val = $(this).find("input").val();
+
+                        if ($(this).attr("reqstat") == 'required'){
+                            if (!isnotin){
+                                isnotin = rqd_val == "";
+                                isnotin_name =  $(this).find(".keyname").text()
+                            }
+                        }
+                        retData[$(this).attr("key")] = rqd_val
+
+                    });
+                    if (isnotin){
+                        popAlert(isnotin_name + " is required!");
+                        return
+                    }
+                    $("#dataCollect").css({display:"none"});
+                    data.positiveCallback(retData);
+                });
+                $("#dataCollect .cancel").click(function(){
+                    $("#dataCollect").css({display:"none"});
+                    data.negativeCallback();
+                })
+
+            }
+            
+            function collect_bfs(parent, collector, pairs, _default, click_callback){  //COLLECTOR'S BUILD FLOAT AND SEARCH FUNC.
+                //THIS WILL BUILD THE ELEMENT OBJECT WITH "PAIRS" AND LOAD IT UP IN THE "PARENT"
+                //_default is the key:value pair for when the search text is not found
+                //CLICK CALL BACK IS CALLED WHEN ANY SEARCH RESULT IS CLICKED
+                if (!_default){
+                    _default = {"text":""}
+                }
+                let str = `<div class="collect_floater">
+                    ${Object.keys(pairs).map(key=>{
+                        return `<div class="cf_entry normal" key="${key}">${key}</div>`
+                    }).join("")}
+                    ${`<div class="cf_entry default" style="display:none">${_default['text']}</div>`}
+                </div>`;
+                $(parent).append(str)
+                
+                let searchFunc = (text)=>{
+                    var rgxp = new RegExp(text, "gi");
+                    let found = false;
+                    Object.keys(pairs).map(function(key){
+                        let ktxt =  key+ " - "+ pairs[key]
+                        if (ktxt.match(rgxp) !== null){
+                            found = true
+                            $(`.collect_floater .cf_entry[key='${key}']`).css("display", "block");
+                        }else{
+                            $(`.collect_floater .cf_entry[key='${key}']`).css("display", "none");
+                        }
+                    });
+                    if (!found){
+                        //IF NOTHING IS FOUND, IT WILL hide the pallet
+                        $(`.collect_floater`).css("display", "none");
+                    }else{
+                        $(`.collect_floater`).css("display", "block");
+                    }
+                }
+                //REMOVE ALL LISTENING FUNCTION
+                $(collector).unbind('input')
+                //LISTEN FOR WHEN AN INPUT WILL BE MADE IN THE INPUT BOX
+                $(collector).on('input', function() {
+                    let text = $(this).val()        
+                    $(collector).attr("key", "_null_");
+                    searchFunc(text);
+                });
+                searchFunc($(collector).val())
+                
+                $(".collect_floater .cf_entry.normal").click(function(){
+                    //THIS IS TO REMOVE THE FLOAT WHEN A CHILD IS CLICKED
+                    let key = $(this).attr('key');
+                    let val = $(this).text();
+                    $(collector).val(val).attr("key", key);
+                    $(parent + " .collect_floater").remove()
+                    click_callback(val)
+                })
+                $(".collect_floater .cf_entry.default").click(function(){
+                    _default['callback']();
+                    $(parent + " .collect_floater").remove()
+                })
+                
+            }
+        </script>
+    </div>
+
+    <style>
+        .blue-hold .mcircle{
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            position: absolute;
+            border: 30px solid rgb(226, 226, 226);
+            top: 0px;
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
+            animation: base 2s infinite;
+        }
+        .mcircle.c1{
+            animation-delay: 1s;
+        }
+        .mcircle.c2{
+            animation-delay: 0.5s;
+        }
+        .mcircle.c3{
+            animation-delay: 0s;
+        }
+        
+        .blue-super-hold{
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .blue-hold{
+            height: 60px;
+            width: 60px;
+            display: flex;
+            margin: 0px auto;
+            position: relative;
+            justify-content: center;
+        }
+        .blue-hold svg{
+            height: 40%;
+            margin-top: 30%;
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes base {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .fingerprint{
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 70px;
+            height: 70px;
+            background-color: #6161c5;
+            box-shadow: 0px 0px 27px -2px grey;
+            padding: 10px;
+            border-radius: 100%;
+
+        }
+        .fingerprint svg{
+            height: 50%;
+            display: flex;
+            margin: 0px auto;
+            fill: white;
+        }
+    </style>
+
+    <section class="inner flex main-content">
+        <section class="subhold">
+            <!-- Head Nav -->
+            <div class="top-nav">
+                <div class="arrow c-vert" id="page-back-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+                </div>
+                <span class="c-vert">
+                    Payout          
+                </span>      
+                <script>$("#page-back-button").click(()=>{history.back()})</script>
+            </div>
+            <!-- Content -->
+            <section class="content-area">
+                <div class="product-super">
+                    <div class="invitecontrol">
+                        <div class="entry reject" style="right: 120px; background-color: red;">Reject Channel</div>
+                        <div class="entry accept" >Accept Channel</div>    
+                        <div class="entry exit" style="top: 25px; background-color: red; bottom: unset;z-index: 100;">Exit Channel</div>    
+                        <style>
+                            .invitecontrol{
+                                width:calc(100% - 20px);
+                                position: relative;
+                                margin-right: 10px;
+                                z-index: 10;
+                            }
+                            .invitecontrol .entry{
+                                padding: 5px 10px;
+                                border-radius: 5px;
+                                position: absolute;
+                                right: 0px;
+                                bottom: -55px;
+                                text-align: center;
+                                color: white;
+                                width: 100px;
+                                font-size: 13px;
+                                display: none;
+                                background-color: green;
+                            }
+                        </style>
+                    </div>
+                    <div class="prod-image-hold">
+                        <div class="gallerysuper c-vert editbox">
+                            <div class="slideitemhold">
+                                <div class="slideitem"><img src="../../static/locals/general/images/noimage.png" alt=""></div>
+                            </div>
+                            <div class="sliderhold hidescroll">
+                                <div class="slider"></div>
+                            </div>
+                            <div dir="left" class="left dir s-control c-vert"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></div>
+                            <div dir="right" class="right dir s-control c-vert"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg></div>
+                            <div class="enlarge s-control c-vert"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z"/></svg></div>
+                        
+             
+                            
+            
+                        </div>
+                        
+                    </div>
+        
+                    <div class="itembiosuper" id="itembiosuper">            
+                        <div class="itembio">
+                            <div status=0 class="c-vert swipe-control">
+                                <svg style="height: 14px; fill: white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"/></svg>
+                            </div> 
+                            <div class="topline"></div>
+        
+                            <div class="innerscroll">
+        
+                                <div class="bio deadline_data" >
+                                    <div class="head" bio={{has_deadline}}>Loading Item:</div>
+                                    <div class="value" bio="{{deadline_text}}">
+                                        <div class="_loader" style="transform: rotate(90deg);
+                                            width: 15px;
+                                            margin-left: 27px;">
+                                        </div>
+                                        <style>
+                                            /* HTML: <div class="loader"></div> */
+                                            ._loader {
+                                                width: 15px;
+                                                aspect-ratio: 1;
+                                                --c: no-repeat linear-gradient(#525252 0 0);
+                                                background: 
+                                                    var(--c) 0%   100%,
+                                                    var(--c) 50%  100%,
+                                                    var(--c) 100% 100%;
+                                                animation: l2 1s infinite linear;
+                                            }
+                                            @keyframes l2 {
+                                                0%  {background-size: 20% 100%,20% 100%,20% 100%}
+                                                20% {background-size: 20% 60% ,20% 100%,20% 100%}
+                                                40% {background-size: 20% 80% ,20% 60% ,20% 100%}
+                                                60% {background-size: 20% 100%,20% 80% ,20% 60% }
+                                                80% {background-size: 20% 100%,20% 100%,20% 80% }
+                                                100%{background-size: 20% 100%,20% 100%,20% 100%}
+                                            }
+                                        </style>
+                                    </div>
+                                </div>
+        
+                                <div class="standing" style="display: none;">
+                                    <div class="bio description" style="margin: 0; padding: 0px 10px;">
+                                        <div class="body">Seems you have some payments that did not complete in the last transaction. Would you clear the standings now?</div>
+                                    </div>
+                                    <div class="action-super">                            
+                                        <div id="clearoutstanding" class="addtocart" style="background-color: green;">
+                                            <svg style="height: 16px;fill:white; margin: auto 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M32 0C49.7 0 64 14.3 64 32V48l69-17.2c38.1-9.5 78.3-5.1 113.5 12.5c46.3 23.2 100.8 23.2 147.1 0l9.6-4.8C423.8 28.1 448 43.1 448 66.1V345.8c0 13.3-8.3 25.3-20.8 30l-34.7 13c-46.2 17.3-97.6 14.6-141.7-7.4c-37.9-19-81.4-23.7-122.5-13.4L64 384v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V400 334 64 32C0 14.3 14.3 0 32 0zM64 187.1l64-13.9v65.5L64 252.6V318l48.8-12.2c5.1-1.3 10.1-2.4 15.2-3.3V238.7l38.9-8.4c8.3-1.8 16.7-2.5 25.1-2.1l0-64c13.6 .4 27.2 2.6 40.4 6.4l23.6 6.9v66.7l-41.7-12.3c-7.3-2.1-14.8-3.4-22.3-3.8v71.4c21.8 1.9 43.3 6.7 64 14.4V244.2l22.7 6.7c13.5 4 27.3 6.4 41.3 7.4V194c-7.8-.8-15.6-2.3-23.2-4.5l-40.8-12v-62c-13-3.8-25.8-8.8-38.2-15c-8.2-4.1-16.9-7-25.8-8.8v72.4c-13-.4-26 .8-38.7 3.6L128 173.2V98L64 114v73.1zM320 335.7c16.8 1.5 33.9-.7 50-6.8l14-5.2V251.9l-7.9 1.8c-18.4 4.3-37.3 5.7-56.1 4.5v77.4zm64-149.4V115.4c-20.9 6.1-42.4 9.1-64 9.1V194c13.9 1.4 28 .5 41.7-2.6l22.3-5.2z"/></svg>
+                                            <span class="c-vert">Complete Standing</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bio description ql-snow">
+                                    <div class="head">
+                                        Description | <span style="font-size: 11px;">Loading code...</span>
+                                        <span id="codehold" style="display: none;">Loading code...</span>
+                                        <svg id="copyscode" style="height: 16px;fill:#3c3c3c; margin: auto 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg>
+                                    </div> 
+                                    <div class="body ql-editor">Loading...</div>
+                                </div>
+                                <div class="action-super">
+                                    
+                                    <div id="payout" class="addtocart">
+                                        <svg style="height: 16px;fill:white; margin: auto 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M96 0C107.5 0 117.4 8.19 119.6 19.51L121.1 32H541.8C562.1 32 578.3 52.25 572.6 72.66L518.6 264.7C514.7 278.5 502.1 288 487.8 288H170.7L179.9 336H488C501.3 336 512 346.7 512 360C512 373.3 501.3 384 488 384H159.1C148.5 384 138.6 375.8 136.4 364.5L76.14 48H24C10.75 48 0 37.25 0 24C0 10.75 10.75 0 24 0H96zM272 180H316V224C316 235 324.1 244 336 244C347 244 356 235 356 224V180H400C411 180 420 171 420 160C420 148.1 411 140 400 140H356V96C356 84.95 347 76 336 76C324.1 76 316 84.95 316 96V140H272C260.1 140 252 148.1 252 160C252 171 260.1 180 272 180zM128 464C128 437.5 149.5 416 176 416C202.5 416 224 437.5 224 464C224 490.5 202.5 512 176 512C149.5 512 128 490.5 128 464zM512 464C512 490.5 490.5 512 464 512C437.5 512 416 490.5 416 464C416 437.5 437.5 416 464 416C490.5 416 512 437.5 512 464z"/></svg>
+                                        <span class="c-vert">Pay Now</span>
+                                    </div>
+                                    <div id="viewrecords" class="addtocart">
+                                        <svg style="height: 16px;fill:white; margin: auto 10px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 113C-2.3 103.6-2.3 88.4 7 79s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zm0 160c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.4 4.9-10.6 7.8-17.2 7.9s-12.9-2.4-17.6-7L7 273c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l22.1 22.1 55.1-61.2c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM160 416c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H192c-17.7 0-32-14.3-32-32zM48 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
+                                        <span class="c-vert">View Records</span>
+                                    </div>
+        
+                                </div>
+                                
+        
+                                <div class="rowextra" id="pay_milestone">
+                                    <div class="head">Milestone</div>
+                                    <div class="mile-hold">
+        
+                                    </div>
+                                    
+                                    <style>
+                                        .rowextra{
+                                            padding: 10px;
+                                            margin: 25px 15px;
+                                            border-top: 1px dashed grey;
+                                            transition: all 0.3s ease;
+                                            /* overflow: hidden; */
+                                            /* height: 0px; */
+                                            border:0px;
+                                            padding: 0px;
+                                        }
+                                        .showmore svg{
+                                            transform: rotate(180deg);
+                                            transition: all 0.3s ease;
+                                        }
+                                        .user-row.open-miles .rowextra{
+                                            height: max-content;
+                                            border-top:1px dashed grey;
+                                            padding: 10px;
+                                        }
+                                        .user-row.open-miles .showmore svg{
+                                            transform: rotate(0deg);
+        
+                                        }
+                                        .rowextra .head{
+                                            font-weight: bold;
+                                        }
+        
+                                        .rowextra .mile-hold{
+                                            width: 100%;
+                                            overflow-x: scroll;
+                                            font-size: 13px;
+                                        }
+        
+                                        .rowextra .mile-item{
+                                            padding: 10px 15px;
+                                            margin: 10px 20px;
+                                            background-color: #e9e9e9;
+                                            width: max-content;
+                                            display: flex;
+                                            font-size: 13px;
+                                            border-radius: 3px;
+                                        }
+                                        .rowextra .mile-item > :nth-child(n){
+                                            margin: 0px 5px;
+                                            align-self: center;
+                                        }
+                                    </style>
+                                </div>
+        
+                                <div class="otherpays">
+                                    <div class="stylehold">
+        
+                                    </div>
+                                    
+                                    <div class="head">Other Payments</div>
+        
+                                    <section class="reactport" for="PendingDue_Super" id="PendingDue_Super">
+         
+                                    </section>
+                                </div>
+                               
+                            </div>                  
+                                
+                        </div>
+                    </div>
+                    <div class="datecollect-hold c-vert" id="datecollecthold" style="z-index: 101; display: none;">
+                        <style>
+                                                
+                            .datecollect-hold{
+                                position: fixed;
+                                top: 0px;
+                                backdrop-filter: blur(5px);
+                                background-color: rgba(255, 255, 255, 0.589);
+                                left: 0px;
+                                height: 100%;
+                                width: 100%;
+                            }
+                            .datecollect-hold .datecollect{
+                                width: 80%;
+                                margin: 0px auto;
+                                background-color: whitesmoke;
+                                box-shadow: 0px 0px 20px -4px grey;
+                                border-radius: 10px;
+                                padding: 10px;
+                            }
+                            .datecollect-hold .datecollect .head{
+                                text-align: center;
+                                font-weight: bold;
+                                font-size: 14px;
+                            }
+                            .datecollect-hold .datecollect input{
+                                width: 95%;
+                                margin: 0px auto;
+                                display: block;
+                            }
+                            .datecollect-hold .datecollect .control{
+                                display: flex;
+                                justify-content: flex-end;
+                            }
+                            .datecollect .control >:nth-child(n){
+                                padding: 10px;
+                                cursor: pointer;
+                                font-size: 14px;
+                                font-weight: bold;
+                                margin: 0px 10px;
+                            }
+                
+                        </style>
+                        <div class="datecollect">
+                            <div class="head">Set a due date</div>
+                            <div vals="starttime" class="texthold editbox ">
+                                <input class="collectible" min="2023-01-07T00:00" type="datetime-local" id="starttime"
+                                    name="meeting-time" 
+                                    style="
+                                        padding: 10px;
+                                        border: none;
+                                        background-color:white;
+                                        outline: none;
+                                        border-radius: 5px 0">
+                                </input>
+                            </div>
+                            <div class="control">
+                                <div class="cancel">Cancel</div>
+                                <div class="proceed"> Proceed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>   
+                
+            </section>
+        </section>
+    </section>
+    <section class="nav-tab c-vert">
+        <div class="super-hold">
+            <div class="cancel">
+                <svg style="height: 15px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>                    
+            </div>
+            <div class="userpack c-vert">
+                <!-- <img src="../../static/dashboard/img/user.png" alt=""> -->
+                <div class="details-hold">
+                    <div class="initial-hold c-vert">O</div>
+                    <div class="subdet c-vert">
+                        <span class="name __to_load c-vert preventOverflow" item="name">Local User</span>
+                        <span class="mail __to_load preventOverflow" item="email">localemail@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-itempack">
+                <div class="nav-item" redir="/dashboard">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg>                    </span>
+                    <span class="ttl">Dashboard</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                <div class="nav-item" redir="/account">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+                    </span>
+                    <span class="ttl">Account</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                <div class="nav-item limited" to="member rep" redir="/allattendances">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z"/></svg>
+                    </span>
+                    <span class="ttl">Attendances</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                <div class="nav-item limited" to="member rep" redir="/allpayments">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM64 80c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16zm128 72c8.8 0 16 7.2 16 16v17.3c8.5 1.2 16.7 3.1 24.1 5.1c8.5 2.3 13.6 11 11.3 19.6s-11 13.6-19.6 11.3c-11.1-3-22-5.2-32.1-5.3c-8.4-.1-17.4 1.8-23.6 5.5c-5.7 3.4-8.1 7.3-8.1 12.8c0 3.7 1.3 6.5 7.3 10.1c6.9 4.1 16.6 7.1 29.2 10.9l.5 .1 0 0 0 0c11.3 3.4 25.3 7.6 36.3 14.6c12.1 7.6 22.4 19.7 22.7 38.2c.3 19.3-9.6 33.3-22.9 41.6c-7.7 4.8-16.4 7.6-25.1 9.1V440c0 8.8-7.2 16-16 16s-16-7.2-16-16V422.2c-11.2-2.1-21.7-5.7-30.9-8.9l0 0c-2.1-.7-4.2-1.4-6.2-2.1c-8.4-2.8-12.9-11.9-10.1-20.2s11.9-12.9 20.2-10.1c2.5 .8 4.8 1.6 7.1 2.4l0 0 0 0 0 0c13.6 4.6 24.6 8.4 36.3 8.7c9.1 .3 17.9-1.7 23.7-5.3c5.1-3.2 7.9-7.3 7.8-14c-.1-4.6-1.8-7.8-7.7-11.6c-6.8-4.3-16.5-7.4-29-11.2l-1.6-.5 0 0c-11-3.3-24.3-7.3-34.8-13.7c-12-7.2-22.6-18.9-22.7-37.3c-.1-19.4 10.8-32.8 23.8-40.5c7.5-4.4 15.8-7.2 24.1-8.7V232c0-8.8 7.2-16 16-16z"/></svg>
+                    </span>
+                    <span class="ttl">Payments</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                <div class="nav-item limited" to="member rep" redir="/withdrawals">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M535 41c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l64 64c4.5 4.5 7 10.6 7 17s-2.5 12.5-7 17l-64 64c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l23-23L384 112c-13.3 0-24-10.7-24-24s10.7-24 24-24l174.1 0L535 41zM105 377l-23 23L256 400c13.3 0 24 10.7 24 24s-10.7 24-24 24L81.9 448l23 23c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L7 441c-4.5-4.5-7-10.6-7-17s2.5-12.5 7-17l64-64c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM96 64H337.9c-3.7 7.2-5.9 15.3-5.9 24c0 28.7 23.3 52 52 52l117.4 0c-4 17 .6 35.5 13.8 48.8c20.3 20.3 53.2 20.3 73.5 0L608 169.5V384c0 35.3-28.7 64-64 64H302.1c3.7-7.2 5.9-15.3 5.9-24c0-28.7-23.3-52-52-52l-117.4 0c4-17-.6-35.5-13.8-48.8c-20.3-20.3-53.2-20.3-73.5 0L32 342.5V128c0-35.3 28.7-64 64-64zm64 64H96v64c35.3 0 64-28.7 64-64zM544 320c-35.3 0-64 28.7-64 64h64V320zM320 352a96 96 0 1 0 0-192 96 96 0 1 0 0 192z"/></svg>
+                    </span>
+                    <span class="ttl">Withdrawals</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                
+                <div class="nav-item" redir="/notifications">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z"/></svg>
+                    </span>
+                    <span class="ttl">Notifications</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                <div class="nav-item" redir="/viewgroups">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M211.2 96a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zM32 256c0 17.7 14.3 32 32 32h85.6c10.1-39.4 38.6-71.5 75.8-86.6c-9.7-6-21.2-9.4-33.4-9.4H96c-35.3 0-64 28.7-64 64zm461.6 32H576c17.7 0 32-14.3 32-32c0-35.3-28.7-64-64-64H448c-11.7 0-22.7 3.1-32.1 8.6c38.1 14.8 67.4 47.3 77.7 87.4zM391.2 226.4c-6.9-1.6-14.2-2.4-21.6-2.4h-96c-8.5 0-16.7 1.1-24.5 3.1c-30.8 8.1-55.6 31.1-66.1 60.9c-3.5 10-5.5 20.8-5.5 32c0 17.7 14.3 32 32 32h224c17.7 0 32-14.3 32-32c0-11.2-1.9-22-5.5-32c-10.8-30.7-36.8-54.2-68.9-61.6zM563.2 96a64 64 0 1 0 -128 0 64 64 0 1 0 128 0zM321.6 192a80 80 0 1 0 0-160 80 80 0 1 0 0 160zM32 416c-17.7 0-32 14.3-32 32s14.3 32 32 32H608c17.7 0 32-14.3 32-32s-14.3-32-32-32H32z"/></svg>
+                    </span>
+                    <span class="ttl">View Groups</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+
+                <div class="nav-item" redir="/creategroup">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg>
+                    </span>
+                    <span class="ttl">Create new Group</span>
+                    <span class="svghold c-vert">
+                        <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
+                    </span>
+                </div>
+                
+            </div>
+
+            <div class="nav-itempack" style="margin-top: 40px">
+                <div class="nav-item" id="db-logout">
+                    <span class="svghold c-vert">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M175 175C184.4 165.7 199.6 165.7 208.1 175L255.1 222.1L303 175C312.4 165.7 327.6 165.7 336.1 175C346.3 184.4 346.3 199.6 336.1 208.1L289.9 255.1L336.1 303C346.3 312.4 346.3 327.6 336.1 336.1C327.6 346.3 312.4 346.3 303 336.1L255.1 289.9L208.1 336.1C199.6 346.3 184.4 346.3 175 336.1C165.7 327.6 165.7 312.4 175 303L222.1 255.1L175 208.1C165.7 199.6 165.7 184.4 175 175V175zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"/></svg>                            </span>
+                    </span>
+                    <span class="ttl">Log out</span>
+                </div>
+            </div>
+            
+        </div>
+        
+    </section>
+    <script>
+        $(document).ready(async function(){
+            
+            const searchParams = new URLSearchParams(window.location.search);
+            let uquery = {}
+            for (const param of searchParams) {
+                uquery[param[0]] = param[1]
+            }
+            if (uquery.redir){
+                // window.location.replace(uquery.redir);
+                // window.location.replace(uquery.redir);
+                return
+            }
+        })
+        
+    </script>
+
+    <!-- Loads up the side bar data -->
+    <script src="../../static/locals/general/script/generalscript.js"></script>   
+
+</body>
+
+
+</html>

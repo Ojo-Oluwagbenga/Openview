@@ -70,11 +70,11 @@ flutter_native_splash:
   # web: false
 
   color: "#1000ff"
-  image: "assets/oaulogo.png"
+  image: assets/oaulogo.png
   
   android_12:
     color: "#ff0000"
-    image: "assets/oaulogo.png"
+    image: assets/oaulogo.png
 
 
 
@@ -108,13 +108,8 @@ flutter:
     - assets/static/
 
     #PAGES
-    - assets/static/_takeattendance.html
-    - assets/static/account.html
-    - assets/static/dashboard.html
-    - assets/static/login.html
-    - assets/static/signup.html
-    - assets/static/splash.html
-    - assets/static/not_found.html
+    - assets/static/
+    - assets/static/preloads/
     
     #ASSETS
     - assets/static/locals/account/css/
@@ -125,12 +120,14 @@ flutter:
     - assets/static/locals/dashboard/css/
     - assets/static/locals/dashboard/img/
     - assets/static/locals/dashboard/script/
+    - assets/static/locals/createchannel/css/
     - assets/static/locals/general/css/
     - assets/static/locals/general/fonts/
     - assets/static/locals/general/images/
     - assets/static/locals/general/script/
     - assets/static/locals/notifications/css/
     - assets/static/locals/notifications/images/
+    - assets/static/locals/payout/css/
     - assets/static/locals/recognition/
     - assets/static/locals/recognition/faces/
     - assets/static/locals/recognition/models/

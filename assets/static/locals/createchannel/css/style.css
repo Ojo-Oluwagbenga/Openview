@@ -1,0 +1,224 @@
+body{
+    background-color:whitesmoke
+}
+
+
+.content-area{
+    display: flex;
+    justify-content: space-around;
+}
+.product-super{
+    width: 35%;
+    overflow: scroll;
+}
+.editsuper{
+    width: 98%;
+    max-width: 500px;
+    background-size: 4px 4px;
+    background-repeat: repeat;
+    padding: 10px;
+    margin: 10px 0;
+}
+         
+.editbox.intro{
+    font-size: 14px;
+    color: grey;
+}
+.editbox{
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+h3.ed-name.big{
+    font-size: 17px;
+}
+
+h3.ed-name{
+    font-size: 13px;
+    font-weight: bold;
+    color: #2a2a2a;
+}
+.namesuper .texthold input{
+    padding: 15px;
+    border-radius: 5px 0;
+    outline: none;
+    width: 100%;
+    border: none;
+    margin: 5px 0px;
+}
+
+.colorsuper .colpack{
+    display: flex;
+    flex-wrap: wrap;
+}                
+.colorsuper .colpack .colpallette{
+    height: 100px;
+    width: 100px;
+    background-color: red;
+    margin: 10px;
+    border-radius:10px 0px;
+}
+.colorsuper .colpack .added{
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.colorsuper .colpack .added .addcol{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: grey;
+    margin: 3px;
+    text-align:center;
+}
+.descriptionsuper textarea{
+    padding: 10px;
+    width: 100%;
+    height: 70px;
+    outline: none;
+    border: 2px dotted rgb(177, 175, 175);
+    margin: 10px 0;
+    border-radius: 5px;
+}
+#mpEditorCont{
+    background-color: white;
+    border-radius: 10px;
+}
+.createchannel{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+
+.createchannel .hold{
+    margin: 10px;
+    background-color: #e0dfff;
+    cursor: pointer;padding: 0 10px;
+    display: flex;
+    border-radius: 5px;
+}
+
+.createchannel span{
+    font-weight: normal;
+    padding: 5px;
+    font-size: 13px;
+    text-align: center;
+    color: #3434b3;   
+}
+
+
+/* CSS code for the quill editor */
+.ce-Head{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-shadow: 0 1px 0px rgb(190 190 190);
+}
+#qtSuper{
+    width: 100%;
+    overflow-x: scroll;
+    padding: 5px;
+    margin-left:10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+#qtSuper::-webkit-scrollbar {
+    display: none;
+}
+.ql-toolbar{
+    border-radius: 10px 10px 0 0 !important;
+    min-width: 450px;
+}
+.ql-toolbar > :nth-child(n){
+    float: none !important;
+}
+.ql-toolbar > :nth-child(1){
+    width: 64px;
+    height: 100%;
+    vertical-align: middle;
+    justify-content: space-between;
+    display: inline-flex;
+    flex-direction: row;
+}
+.ql-toolbar > :nth-child(1) div{
+    width: 30px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    cursor:pointer;
+
+}
+.ql-container.ql-snow{
+    border: none !important;
+}
+.ql-toolbar.ql-snow{
+    border: none  !important; 
+}
+.ql-snow .ql-picker {
+    position:relative !important;
+}
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    top: unset;
+    min-width:unset;
+}
+
+#sendCommSup{
+    flex-direction: column;
+    justify-content: center;
+    height: 55px;
+    width: 28px;
+    text-align: center;
+    box-shadow: -5px 0 5px -2px #efefef;
+    font-size: 20px;
+    cursor: pointer;
+    color: red;
+    font-family: "Font Awesome 5 pro";
+    position: static;
+    border-radius: 100%;
+}
+#sendCommSup:hover{
+    color:green;
+}
+strong{
+    font-weight:bold !important;
+}
+em{
+    font-style: italic !important;
+}
+#editor{
+    border-radius: 0 0 10px 10px;
+    /* outline: none; */
+    width: 100%;
+    max-height: 250px;
+    overflow-y: scroll;
+    min-height: 100px;
+    padding-bottom: 50px;
+}
+.ql-editor{
+    box-sizing: border-box;
+}
+h1{
+    font-size: 22px;
+}
+h2{
+    font-size: 20px;
+}
+h3{
+    font-size: 18px;
+}
+a{
+    color: blue;
+}
+.commentEditorSuper{
+    /* border-top: 2px solid grey; */
+    height:100%;
+    margin-top: 15px;
+}
+.commentEdit{
+    /* box-shadow: 0 0px 3px grey; */
+    /* border-radius: 10px 10px 10px 10px !important; */
+}
