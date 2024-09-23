@@ -24,6 +24,7 @@ $(document).ready(function(){
         //CHECK IF THE USER HAS A ATTENDANCE ENTRY IN LOCAL STORAGE
         isOnMobile=true;
     });
+
     //This is loaded from the general upon web page ready
     communicator("fetchCache", ['attendance'], (ret)=>{        
         if (!ret){

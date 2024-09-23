@@ -81,6 +81,8 @@ flutter {
 
 dependencies {
     // ...
+    // implementation platform('com.google.firebase:firebase-bom:33.3.0')
+    // implementation 'com.google.firebase:firebase-analytics'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.android.material:material:1.8.0'

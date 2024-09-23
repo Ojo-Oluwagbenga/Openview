@@ -55,7 +55,7 @@ dependencies:
   bluetooth_classic: ^0.0.1
   flutter_blue_plus: ^1.31.13
   flutter_local_notifications: ^16.3.2
-  firebase_core: ^2.25.4
+  firebase_core: ^2.32.0
   firebase_messaging: ^14.7.16
   bluetooth_enable_fork: ^0.1.6
   geolocator: ^11.0.0

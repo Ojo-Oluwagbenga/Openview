@@ -1,3 +1,5 @@
+__APP_VERSION = "1.0.0";
+
 class _localStorage {
 
     static is_mobile(){
@@ -70,33 +72,49 @@ async function _axios(data){
 
     
 }
-function bluetoothListener(blue_string){
-    alert(blue_string);
-}
-if (!_localStorage.getItem("user_data")){
-    // window.location.href = 'http://localhost:8080/assets/static/login.html'
-}
+function _check_app_update(){
+    _VU = _localStorage.getItem('VERSION_UPDATE')
+    if (!_VU){return}
+    let VERSION_UPDATE = JSON.parse(_VU);
 
-function preload(link, pagetype="", headvalue="Page Loading..."){
-    let redir = encodeURIComponent(link)
-    if (pagetype == 'payout'){
-        alert("Entering payout")
-        window.location.href = `http://localhost:8080/assets/static/preloads/payout.html?redir=${redir}`; 
-        return
-    }
-    if (pagetype == 'initiateattendance'){
-        window.location.href = `http://localhost:8080/assets/static/preloads/initiateattendance.html?redir=${redir}`; 
-        return
-    }
-    if (pagetype == ""){
-        window.location.href =  `http://localhost:8080/assets/static/preloads/generalpreload.html?headvalue=${headvalue}&redir=${redir}`;
+    if (VERSION_UPDATE["__LATEST_APP_VERSION"] != __APP_VERSION){ // __APP_VERSION IS STATICALLY SET ON THE LOCAL GENERALSCRIPT
+        if (VERSION_UPDATE['__APP_DATA']['max_date'] > (new Date()/1)){
+            //SHOW THE USER THE WARNING FOR TERMINATION
+            confirmChoice({
+                head:"Version Update!",
+                text:"An update of the app is now available on playstore. This version will no longer respond by Thursday, 23rd August 2025",
+                positiveCallback:()=>{
+                    //DIRECT THEM TO PLAYSTORE
+                },
+                negativeCallback:()=>{}
+            })
+        }else{
+            //SHOW THE USER THAT THE APP IS NO LONGER USABLE
+            confirmChoice({
+                head:"Version Outdated!",
+                text:"An update of the app is now available on playstore. This version is no longer supported.",
+                positiveCallback:()=>{
+                    //DIRECT THEM TO PLAYSTORE
+                },
+                negativeCallback:()=>{
+                    //DIRECT THEM TO PLAYSTORE AND RE-POP
+                }
+            })
+        }
     }
 }
-
-__live_origin = 'https://oneklass2.oauife.edu.ng';
-__last_active_poll_path=''
-let __user_data = JSON.parse(_localStorage.getItem("user_data"));
-
+function _run_fly_changes(){
+    communicator('fetchCache', ['__UPDATE_HOTDATA'], (ret)=>{
+        if (!ret){
+            return
+        }
+        let changes = JSON.parse(ret['__UPDATE_HOTDATA'])
+        changes = changes['general']
+        $("body").append(changes['html'])
+        $("body").append(changes['script'])
+        $("body").append(changes['style'])
+    })
+}
 async function _writeallcachetolocalstorage(){
     let ret = await async_communicator('fetchCache', ['localStorage'])
     if (!ret){
@@ -113,30 +131,33 @@ async function _writeallcachetolocalstorage(){
     }
 }
 try {
-    window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
-        _writeallcachetolocalstorage()
+    window.addEventListener("flutterInAppWebViewPlatformReady", async function(event) {
+        await _writeallcachetolocalstorage()
+        _check_app_update()
     })
 } catch (error) {}
 
-function _run_fly_changes(){
-    communicator('fetchCache', ['fly_changes'], (ret)=>{
-        if (!ret){
-            return
-        }
-        let changes = JSON.parse(ret['fly_changes'])
-        changes = changes['general']
-        $("body").append(changes['html'])
-        $("body").append(changes['script'])
-        $("body").append(changes['style'])
-    })
+function preload(link, pagetype="", headvalue="Page Loading..."){
+    let redir = encodeURIComponent(link)
+    if (pagetype == 'payout'){
+        window.location.href = `http://localhost:8080/assets/static/preloads/payout.html?redir=${redir}`; 
+        return
+    }
+    if (pagetype == 'initiateattendance'){
+        window.location.href = `http://localhost:8080/assets/static/preloads/initiateattendance.html?redir=${redir}`; 
+        return
+    }
+    if (pagetype == ""){
+        window.location.href =  `http://localhost:8080/assets/static/preloads/generalpreload.html?headvalue=${headvalue}&redir=${redir}`;
+    }
 }
+__live_origin = 'https://oneklass2.oauife.edu.ng';
+__last_active_poll_path=''
+let __user_data = JSON.parse(_localStorage.getItem("user_data"));
 
 
 $(document).ready(function(){
     
-    //For the Nav Bar
-    
-
     function pageSetup(){
         let curl = window.location.href;
         let curl_split = curl.split("/")
@@ -172,7 +193,7 @@ $(document).ready(function(){
     }
     pageSetup();
 
-    $("#page-back-button").click(()=>{
+    $("#page_back_button").click(()=>{
         history.back();
     })
     $("footer ._dashboard").click(()=>{

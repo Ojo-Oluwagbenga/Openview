@@ -17,7 +17,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'Screens/inappwebviewstack.dart';
 import 'Screens/inpplocalfile.dart';
 import 'Screens/queryCache.dart';
-import 'package:google_api_availability/google_api_availability.dart';
+// import 'package:google_api_availability/google_api_availability.dart';
 
 final InAppLocalhostServer localhostServer = InAppLocalhostServer();
 
@@ -64,8 +64,20 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget with WidgetsBindingObserver {
   const MyApp({super.key});
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this); // <--
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("state.name");
+    print(state.name);
+    super.didChangeAppLifecycleState(state);
+  }
 
   // This widget is the root of your application.
   @override
@@ -74,6 +86,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Color.fromARGB(255, 245, 245, 245),
         systemNavigationBarColor: Color.fromARGB(255, 255, 255, 255)));

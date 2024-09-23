@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -53,10 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyATLkf2-yYeK5xs3aRBgyp1ZYnGQK1RX5M',
-    appId: '1:749671932623:android:e16f3c6f654aa1d5934dba',
-    messagingSenderId: '749671932623',
-    projectId: 'welosdfrfsde-fsdd',
-    storageBucket: 'welosdfrfsde-fsdd.appspot.com',
+    apiKey: 'AIzaSyBoESvUmThWZkmTiTXB-0B3F03cvkVt8Fg',
+    appId: '1:799981142269:android:602d587eee1ad3d32efe94',
+    messagingSenderId: '799981142269',
+    projectId: 'oneklass-v2',
+    storageBucket: 'oneklass-v2.appspot.com',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDnfxafrhldM97OuKb6IDy_RDMMXDd3GxA',
+    appId: '1:799981142269:web:0350787cbe96661d2efe94',
+    messagingSenderId: '799981142269',
+    projectId: 'oneklass-v2',
+    authDomain: 'oneklass-v2.firebaseapp.com',
+    storageBucket: 'oneklass-v2.appspot.com',
+    measurementId: 'G-Q339MKL701',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDNrRjkbJJtJxbWURBnXNCioGyd2rqhHAI',
+    appId: '1:799981142269:ios:d694932b462d15ad2efe94',
+    messagingSenderId: '799981142269',
+    projectId: 'oneklass-v2',
+    storageBucket: 'oneklass-v2.appspot.com',
+    iosBundleId: 'com.example.oneKlass',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDNrRjkbJJtJxbWURBnXNCioGyd2rqhHAI',
+    appId: '1:799981142269:ios:d694932b462d15ad2efe94',
+    messagingSenderId: '799981142269',
+    projectId: 'oneklass-v2',
+    storageBucket: 'oneklass-v2.appspot.com',
+    iosBundleId: 'com.example.oneKlass',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDnfxafrhldM97OuKb6IDy_RDMMXDd3GxA',
+    appId: '1:799981142269:web:df354c07dd57b4002efe94',
+    messagingSenderId: '799981142269',
+    projectId: 'oneklass-v2',
+    authDomain: 'oneklass-v2.firebaseapp.com',
+    storageBucket: 'oneklass-v2.appspot.com',
+    measurementId: 'G-Q9G9Z8EFWS',
+  );
+
 }

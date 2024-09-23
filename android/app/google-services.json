@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "749671932623",
-    "project_id": "welosdfrfsde-fsdd",
-    "storage_bucket": "welosdfrfsde-fsdd.appspot.com"
+    "project_number": "799981142269",
+    "project_id": "oneklass-v2",
+    "storage_bucket": "oneklass-v2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749671932623:android:e16f3c6f654aa1d5934dba",
+        "mobilesdk_app_id": "1:799981142269:android:602d587eee1ad3d32efe94",
         "android_client_info": {
           "package_name": "com.example.one_klass"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyATLkf2-yYeK5xs3aRBgyp1ZYnGQK1RX5M"
+          "current_key": "AIzaSyBoESvUmThWZkmTiTXB-0B3F03cvkVt8Fg"
         }
       ],
       "services": {
