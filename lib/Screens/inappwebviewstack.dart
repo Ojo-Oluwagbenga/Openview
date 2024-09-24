@@ -452,6 +452,26 @@ class _MyInAppState extends State<MyInApp> {
                 },
               );
               controller.addJavaScriptHandler(
+                handlerName: 'openStore',
+                callback: (args) async {
+                  // var appPackageName = "com.linkedin.android";
+                  if (Platform.isAndroid || Platform.isIOS) {
+                    final appId = Platform.isAndroid
+                        ? 'com.linkedin.android'
+                        : 'YOUR_IOS_APP_ID';
+                    final url = Uri.parse(
+                      Platform.isAndroid
+                          ? "market://details?id=$appId"
+                          : "https://apps.apple.com/app/id$appId",
+                    );
+                    launchUrl(
+                      url,
+                      mode: LaunchMode.externalApplication,
+                    );
+                  }
+                },
+              );
+              controller.addJavaScriptHandler(
                 handlerName: 'fetchCache',
                 callback: (args) async {
                   List jet = [];

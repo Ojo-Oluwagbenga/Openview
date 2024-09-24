@@ -1,5 +1,4 @@
 __APP_VERSION = "1.0.0";
-
 class _localStorage {
 
     static is_mobile(){
@@ -72,19 +71,38 @@ async function _axios(data){
 
     
 }
-function _check_app_update(){
-    _VU = _localStorage.getItem('VERSION_UPDATE')
-    if (!_VU){return}
-    let VERSION_UPDATE = JSON.parse(_VU);
+async function _check_app_update(){
+    let ret = await async_communicator('fetchCache', ['VERSION_UPDATE'])
+    if (!ret){
+        return
+    }
+    let VERSION_UPDATE = JSON.parse(ret['VERSION_UPDATE']);
 
     if (VERSION_UPDATE["__LATEST_APP_VERSION"] != __APP_VERSION){ // __APP_VERSION IS STATICALLY SET ON THE LOCAL GENERALSCRIPT
-        if (VERSION_UPDATE['__APP_DATA']['max_date'] > (new Date()/1)){
+        let vtime = VERSION_UPDATE['__APP_DATA']['max_date']
+        let stime = (new Date()/1000)
+        alert(vtime)
+        alert(stime)
+        if (vtime > stime){
             //SHOW THE USER THE WARNING FOR TERMINATION
+            let days = (Math.floor((vtime - stime)/(86400)))
+            let text = ""
+            alert (days + ":days")
+            if (days > 1){
+                text = "in " + days + " days time"
+            }
+            if (days == 1){
+                text = "by tommorrow"
+            }
+            if (days == 0){
+                text = "in a few moment"
+            }
             confirmChoice({
                 head:"Version Update!",
-                text:"An update of the app is now available on playstore. This version will no longer respond by Thursday, 23rd August 2025",
-                positiveCallback:()=>{
+                text:"An update of the app is now available on playstore. This version will no longer be supported " + text,
+                positiveCallback:async ()=>{
                     //DIRECT THEM TO PLAYSTORE
+                    await window.flutter_inappwebview.callHandler("openStore", '')
                 },
                 negativeCallback:()=>{}
             })
@@ -93,11 +111,13 @@ function _check_app_update(){
             confirmChoice({
                 head:"Version Outdated!",
                 text:"An update of the app is now available on playstore. This version is no longer supported.",
-                positiveCallback:()=>{
+                positiveCallback:async ()=>{
                     //DIRECT THEM TO PLAYSTORE
+                    await window.flutter_inappwebview.callHandler("openStore", '')
                 },
+                prevent_cancel:true,
                 negativeCallback:()=>{
-                    //DIRECT THEM TO PLAYSTORE AND RE-POP
+                    popAlert("Please get the new version now")
                 }
             })
         }
@@ -133,7 +153,6 @@ async function _writeallcachetolocalstorage(){
 try {
     window.addEventListener("flutterInAppWebViewPlatformReady", async function(event) {
         await _writeallcachetolocalstorage()
-        _check_app_update()
     })
 } catch (error) {}
 

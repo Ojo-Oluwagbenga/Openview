@@ -165,11 +165,15 @@
 
                     $("#alertsuper .actions").unbind("click");
                     $("#alertsuper .positive").click(() => {
-                        $("#alertsuper").css({"display":'none'});
+                        if (!data['prevent_cancel']){
+                            $("#alertsuper").css({"display":'none'});
+                        }
                         data.positiveCallback()
                     });
                     $("#alertsuper .negative").click(function(){
-                        $("#alertsuper").css({"display":'none'});
+                        if (!data['prevent_cancel']){
+                            $("#alertsuper").css({"display":'none'});
+                        }
                         data.negativeCallback();
                     });
                 }
