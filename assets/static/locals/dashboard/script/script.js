@@ -59,8 +59,7 @@ $(document).ready(function(){
                 attd_records:attd_records
             }
         }).then(response => {
-            alert(JSON.stringify(response))
-            alert("Upload complete!")
+            popAlert("Upload complete!")
 
             let messageSet = response.data.messageSet;
             let build = '';
@@ -83,8 +82,6 @@ $(document).ready(function(){
             }
             confirmChoice(data);
         }).catch(error => {
-            alert("Error occurred")
-            alert(error)
             console.error(error)
         })
 

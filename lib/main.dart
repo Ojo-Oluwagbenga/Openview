@@ -36,14 +36,6 @@ Future<void> main() async {
   //     .instance
   //     .checkGooglePlayServicesAvailability();
 
-  try {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-    FirebaseApi().initNotifications();
-  } catch (error) {
-    print(error);
-  }
-
   await FlutterDownloader.initialize(
       debug: false,
       // optional: set to false to disable printing logs to console (default: true)
@@ -54,13 +46,16 @@ Future<void> main() async {
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
-  await localhostServer.start();
   await requestPermissions();
-
-  print("Got to the delay shi");
-  // await Future.delayed(const Duration(seconds: 10));
-  // FlutterNativeSplash.remove();
-
+  try {
+    fCMToken = null;
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseApi().initNotifications();
+  } catch (error) {
+    print(error);
+  }
+  await localhostServer.start();
   runApp(const MyApp());
 }
 
@@ -74,8 +69,6 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("state.name");
-    print(state.name);
     super.didChangeAppLifecycleState(state);
   }
 
@@ -93,12 +86,12 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
     SystemChrome.setApplicationSwitcherDescription(
         ApplicationSwitcherDescription(
-      label: 'OneKlass',
+      label: 'One klass',
       primaryColor: Colors.white.value,
     ));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'OneKlass',
+        title: 'One klass',
         theme: ThemeData(
           primaryIconTheme:
               const IconThemeData(color: Color.fromARGB(255, 228, 102, 102)),
@@ -112,10 +105,10 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
         routes: {
           'a': (context) => const HomeScreen(),
-          'aaa': (context) => const SplashScreen(),
+          // 'aaa': (context) => const SplashScreen(),
           'ad': (context) => const NoNetworkScreen(),
-          'ar': (context) => MyInApp(),
-          'arn': (context) => InAppLocal(),
+          'ar': (context) => const MyInApp(),
+          'arn': (context) => const InAppLocal(),
           'qc': (context) => const FirstTimer(),
         });
   }

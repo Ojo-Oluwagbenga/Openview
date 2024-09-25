@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
-import 'dart:io';
-import 'dart:developer' as developer;
-import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class HomeScreen extends StatefulWidget {

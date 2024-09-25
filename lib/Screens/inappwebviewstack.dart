@@ -7,34 +7,32 @@ import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:one_klass/firebase_options.dart';
 import 'package:one_klass/api/firebase_api.dart';
-import 'package:one_klass/bluthoothswitch.dart';
 import 'package:one_klass/localnotification.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/foundation.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:one_klass/components/databaseCache.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:bluetooth_classic/models/device.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'package:flutter/services.dart';
 import 'package:bluetooth_classic/bluetooth_classic.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 int Alarmtime = 0;
 bool CancelAlarm = false;
 
 class MyInApp extends StatefulWidget {
+  const MyInApp({super.key});
+
   @override
   _MyInAppState createState() => _MyInAppState();
 }
@@ -96,14 +94,10 @@ class _MyInAppState extends State<MyInApp> {
         setState(() {
           scanning = true;
         });
-
-        print("Bluetooth is on, you can now scan for devices.");
       } else if (state == BluetoothAdapterState.off) {
         setState(() {
           scanning = false;
         });
-
-        print("Bluetooth is turned off, please enable it.");
       }
     });
 
@@ -142,46 +136,14 @@ class _MyInAppState extends State<MyInApp> {
 
       setState(() {});
     } on PlatformException catch (e) {
-      print(e);
       setState(() {});
       return false;
     }
     if (!mounted) {
       return false;
     }
-
-    final String message = authenticated ? 'Authorized' : 'Not Authorized';
-    // setState(() {
-    //   _authorized = message;
-    // });
     return authenticated;
   }
-
-  // void requestCameraPermission() async {
-  //   final ble = await Permission.bluetooth.request();
-  //   final location = await Permission.location.request();
-
-  //   final blecon = await Permission.bluetoothConnect.request();
-  //   final blescan = await Permission.bluetoothScan.request();
-  //   if (status == PermissionStatus.granted &&
-  //       foot == PermissionStatus.granted) {
-  //     // Permission granted.
-  //   } else if (status == PermissionStatus.denied &&
-  //       foot == PermissionStatus.denied) {
-  //     await Permission.bluetooth.request();
-  //     await Permission.location.request();
-
-  //     await Permission.camera.request();
-  //     await Permission.storage.request();
-
-  //     await Permission.bluetoothConnect.request();
-  //     await Permission.bluetoothScan.request();
-  //     // Permission denied.
-  //   } else if (status == PermissionStatus.permanentlyDenied &&
-  //       foot == PermissionStatus.permanentlyDenied) {
-  //     // Permission permanently denied.
-  //   }
-  // }
 
   Future<bool> _goBack() async {
     var value = await webViewController.canGoBack();
@@ -200,21 +162,17 @@ class _MyInAppState extends State<MyInApp> {
 
   @override
   void initState() {
-    // copy();
-
     LocalNotification.initialize(flutterLocalNotificationsPlugin);
     tz.initializeTimeZones();
 
     super.initState();
-    //requestPermissions();
-
     FlutterDownloader.registerCallback(downloadCallback);
 
     pullToRefreshController = kIsWeb
         ? null
         : PullToRefreshController(
             options: PullToRefreshOptions(
-              color: Colors.blue,
+              color: const Color.fromARGB(255, 20, 20, 20),
             ),
             onRefresh: () async {
               if (defaultTargetPlatform == TargetPlatform.android) {
@@ -229,16 +187,6 @@ class _MyInAppState extends State<MyInApp> {
     scan();
   }
 
-  //   void requestPermissions() async {
-  //   await Permission.location.request();
-  //   await Permission.camera.request();
-  //   await Permission.storage.request();
-  //   await Permission.bluetooth.request();
-  //   await Permission.bluetoothConnect.request();
-  //   await Permission.bluetoothScan.request();
-  //
-  //}
-
   @override
   void dispose() {
     IsolateNameServer.removePortNameMapping('downloader_send_port');
@@ -252,7 +200,7 @@ class _MyInAppState extends State<MyInApp> {
     send!.send([id, status, progress]);
   }
 
-  var _controller = null;
+  var _controller;
   Future<bool> checkCanConnect() async {
     try {
       var link = Uri.parse("https://google.com");
@@ -270,6 +218,14 @@ class _MyInAppState extends State<MyInApp> {
     }
   }
 
+  Future<String> getFCM() async {
+    if (fCMToken == null) {
+      fCMToken = await FirebaseApi().initNotifications();
+      return fCMToken;
+    }
+    return fCMToken;
+  }
+
   @override
   Widget build(BuildContext context) {
     var subscription = Connectivity()
@@ -279,8 +235,10 @@ class _MyInAppState extends State<MyInApp> {
       _controller.evaluateJavascript(source: "promptNetworkChange($ret);");
     });
 
-    return WillPopScope(
-      onWillPop: () => _goBack(),
+    return PopScope(
+      onPopInvoked: (didPop) {
+        _goBack();
+      },
       child: SafeArea(
         child: Scaffold(
             body: Stack(children: <Widget>[
@@ -363,16 +321,13 @@ class _MyInAppState extends State<MyInApp> {
               controller.addJavaScriptHandler(
                   handlerName: "getFCM",
                   callback: (args) async {
-                    print("Fcm token");
-                    print(fCMToken);
-
-                    return (fCMToken);
+                    var token = await getFCM();
+                    return (token);
                   });
 
               controller.addJavaScriptHandler(
                   handlerName: "getBluetoothDevices",
                   callback: (args) async {
-                    print("hheeeeeeeeeyyyyyyyy");
                     if (scanning == false) {
                       enableBT();
                       scan();
@@ -380,8 +335,6 @@ class _MyInAppState extends State<MyInApp> {
                       return ({});
                     } else {
                       scan();
-                      print("ffffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhh");
-                      print(discoveredDevices);
                       return (discoveredDevices);
                     }
                   });
@@ -401,29 +354,12 @@ class _MyInAppState extends State<MyInApp> {
                   callback: (args) async {
                     for (var a in args) {
                       var dict = a[0];
-                      print(dict);
-                      var route = dict["route"];
                       var url = dict["url"];
-                      print(
-                          "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhgggggggggggggggggggggggggggggggggggggg");
-                      print(url);
                       var link = Uri.parse(url);
                       Map data = dict["data"];
-                      var pair = data["fetchpair"];
-                      var set = data["fetchset"];
-
-                      print(data);
-
-                      print(data["fetchpair"]);
-                      print(data["fetchset"]);
                       var response =
                           await http.post(link, body: jsonEncode(data));
-                      //     await http.post(link, body: {
-                      //   // "fetchpair": {"id__gt": "0"}.toString(),
-                      //   // "fetchset": "[]"
-                      // });
-                      print("The resp0202");
-                      print(response);
+
                       return (response.body);
                     }
                   });

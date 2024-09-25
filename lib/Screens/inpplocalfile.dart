@@ -5,7 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:one_klass/components/databaseCache.dart';
 
 class InAppLocal extends StatefulWidget {
-  InAppLocal({super.key});
+  const InAppLocal({super.key});
 
   @override
   State<InAppLocal> createState() => _InAppLocalState();

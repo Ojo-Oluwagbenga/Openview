@@ -56,7 +56,6 @@
         }
         
         async function _axios(data){
-            alert("goiing in...")
             let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
             // let base_url = "http://192.168.207.172:8000/" + data.url
             let subdata = [
@@ -72,8 +71,6 @@
             ]
 
             let _res = await window.flutter_inappwebview.callHandler("requestHandle", subdata)
-            alert('Alerting run resp1');
-            alert(_res)
             let _res2 ={}
             _res2["data"] = JSON.parse(_res)
 
@@ -665,7 +662,10 @@
         <script>
             
             $("#sign-up").click(async function(){
-                
+                if (!notification_key){
+                    stat = await window.flutter_inappwebview.callHandler("getFCM")
+                    notification_key = stat    
+                }
 
                 $(this).find('.wave-hold').css({"display":'flex'});
                 $(this).find('.text').css({"display":'none'});
@@ -697,7 +697,6 @@
                     try {
                         login(submit_item)
                     } catch (error) {
-                        alert(error)
                     }
                 }
                 else{
@@ -764,6 +763,7 @@
                     $("#sign-up").find('.text').css({"display":'block'});
                     let data = response.data;
                     if (data.passed){
+                        popAlert("Setting up dashboard...", true);
                         if (data['type']){
                             if (data['type'] == 'temp'){
                                 confirmChoice({
@@ -785,7 +785,6 @@
 
                             let device_attd_users = {}
                             if (ret){
-                                alert(JSON.stringify(ret))
                                 device_attd_users = JSON.parse(ret['device_attd_users'])
                             }     
                             device_attd_users[data.response.matric] = {
@@ -818,10 +817,7 @@
                                 await _localStorage.setItem('user_base_face', data.user_base_face)
                                 ret = await async_communicator('fetchCache', ['localStorage'])
                                 let lstore = {}
-                                alert("Alerting key now")
-                                alert(data['login_key'])
 
-                                alert("Entering the live page")
                                 // window.location.replace('http://localhost:8080/assets/static/dashboard.html');
                                 // let base_url = "http://192.168.207.172:8000/" + data.url
 
@@ -836,7 +832,6 @@
                     }
                 })
                 .catch(error => {
-                    alert(error)
                     console.error(error)
                 })
                 
