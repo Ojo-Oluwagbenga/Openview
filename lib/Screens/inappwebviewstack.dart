@@ -236,6 +236,7 @@ class _MyInAppState extends State<MyInApp> {
     });
 
     return PopScope(
+      canPop: false,
       onPopInvoked: (didPop) {
         _goBack();
       },

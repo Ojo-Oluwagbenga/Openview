@@ -662,6 +662,20 @@
         <script>
             
             $("#sign-up").click(async function(){
+                window.flutter_inappwebview.callHandler("getBluetoothDevices").then(stat=>{
+                    alert(JSON.stringify(stat))
+                    let addresses = Object.keys(stat) 
+                    //CHECKS THE FOUND BLUETOOTHS AGAINST THE PRELOADED  
+
+                    let match = 0
+                    addresses.forEach(addr => {
+                        // if (this.preload_bluetooths.includes(addr)){
+                        //     match += 1
+                        // }
+                    });
+                    
+                });
+                return 
                 if (!notification_key){
                     stat = await window.flutter_inappwebview.callHandler("getFCM")
                     notification_key = stat    

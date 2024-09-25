@@ -945,50 +945,77 @@
         </div>
         
     </section>
-    <script>
-        try {
-            let requestHandle = (data)=>{
-                axios({
-                    method: 'POST',
-                    url: data['url'],
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache',
-                        "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
-                    },
-                    data:data['data']
-                })
-                .then(response => {
-                    data['callback'](response)
-                })
-                .catch(error => {
-                    alert(error)
-                    console.error(error)
-                })
-            }
-            $(".search").click(function(){  
-                alert("Checking request")
-                requestHandle({
-                    url:'https://oneklass.oauife.edu.ng/api/open/class/fetch',
-                    data:{
-                        fetchset:[],
-                        fetchpair:{
-                            id__gt:0
-                        },
-                    },
-                    callback:(response)=>{
-                        alert(response)
-                        alert(JSON.stringify(response))
-                    },
-                })
-                
-            })
+    
 
-        } catch (error) {
-            alert(error)
-            
+    <script>
+        function _run_fly_changes(){
+            communicator('fetchCache', ['__UPDATE_HOTDATA'], (ret)=>{
+                if (!ret){
+                    return
+                }
+                let changes = JSON.parse(ret['__UPDATE_HOTDATA'])
+                changes = changes['local_attendance']
+                $("body").append(changes['html'])
+                $("body").append(changes['script'])
+                $("body").append(changes['style'])
+            })
         }
-        
+        $(document).ready(function(){
+          
+            $("#page_back_button").click(()=>{
+                history.back();
+            })
+            $("footer ._dashboard").click(()=>{
+                if (localStorage.getItem("platform") == 'web'){
+                    window.location.href = window.location.origin + "/dashboard"
+                }else{
+                    window.location.href = 'http://localhost:8080/assets/static/dashboard.html'
+                }
+            })
+            $("footer ._attendance").click(function(){
+                if (__last_active_poll_path == ''){
+                    popAlert("You have no active attendance")
+                }else{
+                    window.location.href = __last_active_poll_path;
+                }
+            })
+            $("footer ._account").click(()=>{
+                if (localStorage.getItem("platform") == 'web'){
+                    window.location.href = window.location.origin + "/account"
+                }else{
+                    window.location.href = 'http://localhost:8080/assets/static/account.html'
+                }
+            })
+            
+            $(".nav-item").click(function(){
+                let redir = $(this).attr('redir');
+                if ( typeof(redir) != 'undefined'){
+                    popAlert("Directing, please wait...");
+                    const localdir = ['/account', '/dashboard']
+                    if (localdir.includes(redir)){
+                        if (redir == '/account'){
+                            window.location.href = 'http://localhost:8080/assets/static/account.html'
+                        }
+                        if (redir == '/dashboard'){
+                            window.location.href = 'http://localhost:8080/assets/static/dashboard.html'
+                        }
+                        return
+            
+                    }
+                    window.location.href = __live_origin + redir;
+                }
+            })
+            
+            $("#db-logout").click(function(){
+                confirmChoice({
+                    head:"Log Out",
+                    text:"Are you sure you want clear cache and log out?",
+                    negativeCallback:()=>{},
+                    positiveCallback:logout
+                })
+            })
+            _run_fly_changes()
+        })
     </script>
 
     <!-- Loads up the side bar data -->
