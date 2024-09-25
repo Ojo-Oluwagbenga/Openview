@@ -53,7 +53,8 @@ async function _axios(data){
     let base_url = __live_origin +"/" + data.url
     // let base_url = "http://192.168.207.172:8000/" + data.url
     data.data['platform'] = 'mobile'
-
+    data.data['pub_api_key'] = _localStorage.getItem("pub_api_key")
+    
     let subdata = [
         {
             "requestName":"req_name",
