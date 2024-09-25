@@ -81,13 +81,10 @@ async function _check_app_update(){
     if (VERSION_UPDATE["__LATEST_APP_VERSION"] != __APP_VERSION){ // __APP_VERSION IS STATICALLY SET ON THE LOCAL GENERALSCRIPT
         let vtime = VERSION_UPDATE['__APP_DATA']['max_date']
         let stime = (new Date()/1000)
-        alert(vtime)
-        alert(stime)
         if (vtime > stime){
             //SHOW THE USER THE WARNING FOR TERMINATION
             let days = (Math.floor((vtime - stime)/(86400)))
             let text = ""
-            alert (days + ":days")
             if (days > 1){
                 text = "in " + days + " days time"
             }

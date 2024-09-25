@@ -43,7 +43,7 @@ align-items:center;
 }
 
 .for-instructor{
-    margin-top: 20px;
+    margin-top: 133px;
 }
 .for-instructor > .head{
     font-weight: bold;
@@ -177,6 +177,15 @@ align-items:center;
     font-size:.8rem;
     font-weight:400; 
 }
+    .jointab {
+        padding: 2px 10px;
+        background-color: grey;
+        border-radius: 5px;
+        color: white;
+        font-size: 20px;
+        margin-right: 20px;
+        display: flex;
+    }
     .pending-head{
         display: flex;
         justify-content: space-between;
