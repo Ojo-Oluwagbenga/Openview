@@ -101,10 +101,6 @@ class _MyInAppState extends State<MyInApp> {
       }
     });
 
-    // await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
-    // var result = FlutterBluePlus.scanResults;
-    // print(result);
-
     await _bluetoothClassicPlugin.startScan();
     _bluetoothClassicPlugin.onDeviceDiscovered().listen(
       (event) {

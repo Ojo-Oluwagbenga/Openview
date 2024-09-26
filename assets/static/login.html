@@ -77,14 +77,14 @@
             return (_res2)
         }
 
-        //THIS PAGE SHOULD NOT LOAD EXCEPT THE USER IS LOGGED OUT OF LIVE
-        _localStorage.clear()
-
-        
+       
         var notification_key = 'nil'        
         var platform = 'mobile'
         //LISTEN ON WEBVIEW MOUNTED ON THE DEVICE
         window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+             //THIS PAGE SHOULD NOT LOAD EXCEPT THE USER IS LOGGED OUT OF LIVE
+            _localStorage.clear()
+
             //EXTRACT THE NOTIFICATION OF THE DEVICE
             window.flutter_inappwebview.callHandler("getFCM").then(stat=>{
                 notification_key = stat    
@@ -662,20 +662,7 @@
         <script>
             
             $("#sign-up").click(async function(){
-                window.flutter_inappwebview.callHandler("getBluetoothDevices").then(stat=>{
-                    alert(JSON.stringify(stat))
-                    let addresses = Object.keys(stat) 
-                    //CHECKS THE FOUND BLUETOOTHS AGAINST THE PRELOADED  
-
-                    let match = 0
-                    addresses.forEach(addr => {
-                        // if (this.preload_bluetooths.includes(addr)){
-                        //     match += 1
-                        // }
-                    });
-                    
-                });
-                return 
+                
                 if (!notification_key){
                     stat = await window.flutter_inappwebview.callHandler("getFCM")
                     notification_key = stat    
@@ -777,7 +764,7 @@
                     $("#sign-up").find('.text').css({"display":'block'});
                     let data = response.data;
                     if (data.passed){
-                        popAlert("Setting up dashboard...", true);
+                        popAlert("Setting up the dashboard...", true);
                         if (data['type']){
                             if (data['type'] == 'temp'){
                                 confirmChoice({
@@ -829,14 +816,7 @@
                                 await _localStorage.setItem("pub_api_key", data.pub_api_key)
                                 await _localStorage.setItem('user_data', JSON.stringify(data.response))
                                 await _localStorage.setItem('user_base_face', data.user_base_face)
-                                ret = await async_communicator('fetchCache', ['localStorage'])
-                                let lstore = {}
-
-                                // window.location.replace('http://localhost:8080/assets/static/dashboard.html');
-                                // let base_url = "http://192.168.207.172:8000/" + data.url
-
                                 window.location.replace('https://oneklass2.oauife.edu.ng/dashboard?login_key=' + data['login_key']);
-                                // window.location.replace('http://192.168.207.172:8000/dashboard?login_key=' + data['login_key']);
                             })
                         })
                     

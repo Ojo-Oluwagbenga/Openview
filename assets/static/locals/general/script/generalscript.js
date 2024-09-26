@@ -209,6 +209,7 @@ $(document).ready(function(){
     
     }
     pageSetup();
+    alert(_localStorage.getItem("user_data"))
 
     $("#page_back_button").click(()=>{
         history.back();
@@ -274,9 +275,9 @@ function writeToClipboard(text, prompt) {
 }
 
 async function logout(){
-    popAlert("Logging out...");
-
-    communicator("deleteCache", ['login'], (ret)=>{})
-    await _localStorage.clear();
-    window.location.href = 'http://localhost:8080/assets/static/login.html'
+    popAlert("Logging user out of device...");
+    //GET THE API KEY SO IT CAN BE DELETED FROM DB
+    let pkey = _localStorage.getItem("pub_api_key")
+    let lkey = pkey.split("&")[1]
+    window.location.replace(__live_origin + '/logout?key=' + lkey)
 }
