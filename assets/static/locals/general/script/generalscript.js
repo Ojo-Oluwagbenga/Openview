@@ -68,6 +68,36 @@ async function _axios(data){
     let _res = await window.flutter_inappwebview.callHandler("requestHandle", subdata)
     let _res2 ={}
     _res2["data"] = JSON.parse(_res)
+    try {
+        if (_res2['data']['invalid_key']){
+            confirmChoice({
+                head:"Verification Required",
+                text:`It seems your access key is stale. You will be required to securely login again.`,
+                negativeCallback:()=>{
+                    logout()
+                },
+                positiveCallback:()=>{
+                    logout()
+                }
+            })
+            return
+        }
+        if (_res2['data']['destroyed']){
+            confirmChoice({
+                head:"New Device Detected",
+                text:`You logged in with a different device. You will be required to log into this device again`,
+                negativeCallback:()=>{
+                    logout()
+                },
+                positiveCallback:()=>{
+                    logout()
+                }
+            })
+            return
+        }  
+    } catch (error) {
+            
+    }                                                   
     return (_res2)
 
     
@@ -209,7 +239,6 @@ $(document).ready(function(){
     
     }
     pageSetup();
-    alert(_localStorage.getItem("user_data"))
 
     $("#page_back_button").click(()=>{
         history.back();

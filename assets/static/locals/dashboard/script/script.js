@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    let user_data = JSON.parse(_localStorage.getItem("user_data"));
+    let user_data = JSON.parse(_localStorage.getItem("user_data")); //THIS IS SET UPON LOGING IN
     let destroyed = $("meta[name='destroyed']").attr("content");
     let origin = 'https://oneklass2.oauife.edu.ng';
     if (destroyed == 'True'){ //This would not work in offline
@@ -251,8 +251,10 @@ $(document).ready(function(){
                         _localStorage.setItem("askfingerprint", true)
                         return
                     }
-                    if (fingerprint_owner.user_matric != user_data.matric){
-                        if (user_data.has_face == 1){
+                    let last_time = user_data.last_finger_change;
+                    const days_7 = 604800 //IN SEC
+                    if ((new Date()/1000) > last_time+days_7){
+                        if (fingerprint_owner.user_matric != user_data.matric){
                             confirmChoice({
                                 head:"Set Fingerprint?",
                                 text:`Set up fingerprint on this device to activate instant attendance marking?`,
@@ -261,8 +263,8 @@ $(document).ready(function(){
                                     window.location.href = origin + "/fingersetup";
                                 }
                             })
-                        }
-                    }  
+                        }  
+                    }
                 })
             })
         }
