@@ -95,9 +95,7 @@ async function _axios(data){
             })
             return
         }  
-    } catch (error) {
-            
-    }                                                   
+    } catch (error) {}                                                   
     return (_res2)
 
     

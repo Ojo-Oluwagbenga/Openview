@@ -205,6 +205,11 @@
                 </style>
                 <script>
                     function offline_options(data){
+                        if (data){
+                            if (data.head){
+                                $("#_alertsuper .head").text(data.head);
+                            }
+                        }
                         $("#_alertsuper").css({"display":'flex'});
                         $("#_alertsuper #refresh").click(function(){
                             location.reload()
@@ -278,12 +283,14 @@
                         $(".offline_pop").css({'display':'none'})
                     })
                     function initiate_offline_pop(){
+                        __device_offline = true;
                         $(".offline_pop").css({'display':'flex'})
                         offline_options()
                         
                     }
                     
                     var G_state = true
+                    __device_offline = false;
                     async function prePromptNetwork(){
                         let _res = await window.flutter_inappwebview.callHandler("checkCanConnect", []);
                         promptNetworkChange(_res)
@@ -292,6 +299,7 @@
                         if (state){
                             G_state = true;
                             $(".offline_pop").css({'display':'none'})
+                            __device_offline = false;
                             for (const key in __to_be_loaded) {
                                 __to_be_loaded[key]()
                             }
