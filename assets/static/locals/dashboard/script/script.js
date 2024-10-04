@@ -374,6 +374,7 @@ $(document).ready(function(){
         })
     })
     async function logout(){
+        alert ("Throwing out");
         popAlert("Logging user out of device...");
         //GET THE API KEY SO IT CAN BE DELETED FROM DB
         let pkey = _localStorage.getItem("pub_api_key")

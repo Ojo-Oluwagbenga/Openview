@@ -57,14 +57,14 @@
         
         async function _axios(data){
             let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
+            data.data['platform'] = 'mobile'
+
             // let base_url = "http://192.168.207.172:8000/" + data.url
             let subdata = [
                 {
                     "requestName":"req_name",
                     "data":data.data,
                     "url": base_url,
-                    // "base_url":'oneklass2.oauife.edu.ng',
-                    // "route":'api/open/class/fetch',
                     "protocol":'https',
                     "method":data.method,
                 }

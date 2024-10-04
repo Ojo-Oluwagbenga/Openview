@@ -1,0 +1,22 @@
+flutter_native_splash:
+  android: true
+  # ios: true
+  # web: false
+
+  color: "#a74040"
+  image: assets/oaulogo.png
+  branding: assets/oaulogo.png
+  color_dark: "#a74040"
+  image_dark: assets/oaulogo.png
+  branding_dark: assets/oaulogo.png
+
+  
+  android_12:
+    color: "#a74040"
+    image: assets/oaulogo.png
+    branding: assets/oaulogo.png
+    icon_background_color: "#a74040"
+    image_dark:  assets/oaulogo.png
+    icon_background_color_dark: "#a74040"
+
+

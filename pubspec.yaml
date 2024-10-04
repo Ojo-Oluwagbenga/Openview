@@ -65,16 +65,25 @@ dependencies:
   
 
 flutter_native_splash:
-  # android: true
-  # ios: true
-  # web: false
+  android: true
+  ios: true
+  web: false
 
-  color: "#1000ff"
-  image: assets/oaulogo.png
+  color: "#ffffff"
+  image: images/oneklass.png
+  branding: images/bottom.png
+  color_dark: "#333333"
+  image_dark: images/oneklass.png
+  branding_dark: images/bottom.png
   
   android_12:
-    color: "#ff0000"
-    image: assets/oaulogo.png
+    color: "#ffffff"
+    image:  images/oneklass.png
+    branding: images/bottom.png
+    icon_background_color: "#ffffff"
+    branding_dark: images/bottom.png
+    image_dark:   images/oneklass.png
+    icon_background_color_dark: "#333333"
 
 
 

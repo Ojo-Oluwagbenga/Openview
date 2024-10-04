@@ -121,46 +121,48 @@ $(document).ready(function(){
         popAlert("Coming soon...");
     })
     $("#deleteaccount").click(function(){
-        if (user_data.class_data.class_code){
-          popAlert("Please leave all classes and groups to proceed")
-          return
+        let data = {
+            entryset:[
+                {name:"Password", required:true, keyname:"password", 'placeholder':"Enter password..."},
+            ],
+            positiveCallback:(retdata)=>{
+                _axios({
+                    method: 'POST',
+                    url: 'api/user/delete',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache',
+                        "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
+                    },
+                    data: {
+                        password:retdata.password
+                    }
+                }).then(response => {
+                    response = response.data;
+                    console.log(response);
+                    if (response.passed){
+                        logout();
+                    }else{
+                        popAlert(response.Message);
+                    }
+                    
+                }).catch(error => console.error(error))
+            },
+            negativeCallback:()=>{},
+            head:"Delete Account?",
+            headtext:"This action is irreversible. <br>Enter password below to proceed delete",
+
         }
-        popAlert("Currently can not delete. Hang around, feature coming soon...");
+        dataCollect(data)       
     })
     $("#logout").click(function(){
         confirmChoice({
             head:"Log Out",
             text:"Are you sure you want clear cache and log out?",
             negativeCallback:()=>{},
-            positiveCallback:logout
+            positiveCallback:()=>{
+                logout();
+            }
         })
     })
-    function logout(){
-        popAlert("Logging out...");        
-        communicator("deleteCache", ['login'], (ret)=>{})
-        _axios({
-            method: 'POST',
-            url: 'api/user/logout',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-                "X-CSRFToken" : $("input[name='csrfmiddlewaretoken']").val()
-            },
-            data: {}
-        }).then(response => {
-
-            response = response.data;
-            console.log(response);
-
-            if (response.passed){
-                _localStorage.clear()
-                setTimeout(() => {
-                    location.reload();
-                }, 300);
-            }else{
-                popAlert("Unable to destroy session")
-            }
-        }).catch(error => console.error(error))
-
-    }
 })

@@ -31,10 +31,13 @@ Future<void> requestPermissions() async {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   // GooglePlayServicesAvailability availability = await GoogleApiAvailability
   //     .instance
-  //     .checkGooglePlayServicesAvailability();
+      // .checkGooglePlayServicesAvailability();
+
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await FlutterDownloader.initialize(
       debug: false,

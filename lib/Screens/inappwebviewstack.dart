@@ -26,6 +26,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:bluetooth_classic/bluetooth_classic.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 int Alarmtime = 0;
 bool CancelAlarm = false;
@@ -56,18 +57,10 @@ class _MyInAppState extends State<MyInApp> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  ////////////////
-  ///
-  ///
   final _bluetoothClassicPlugin = BluetoothClassic();
   List device = [];
   Map<String, Map> discoveredDevices = {};
   bool scanning = false;
-
-  //////////////////////////////////
-  ////////////////////////////
-  /////////////////////
-/////////////////////
 
   Future<void> enableBT() async {
     await BluetoothEnable.enableBluetooth.then((value) {
@@ -231,6 +224,7 @@ class _MyInAppState extends State<MyInApp> {
       _controller.evaluateJavascript(source: "promptNetworkChange($ret);");
     });
 
+    FlutterNativeSplash.remove();
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
