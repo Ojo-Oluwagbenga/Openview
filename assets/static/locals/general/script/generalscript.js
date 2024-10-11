@@ -196,7 +196,7 @@ function preload(link, pagetype="", headvalue="Page Loading..."){
         window.location.href =  `http://localhost:8080/assets/static/preloads/generalpreload.html?headvalue=${headvalue}&redir=${redir}`;
     }
 }
-__live_origin = 'https://oneklass2.oauife.edu.ng';
+__live_origin = 'https://oneklass.com.ng';
 __last_active_poll_path=''
 let __user_data = JSON.parse(_localStorage.getItem("user_data"));
 

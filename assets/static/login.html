@@ -56,7 +56,7 @@
         }
         
         async function _axios(data){
-            let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
+            let base_url = "https://oneklass.com.ng/" + data.url
             data.data['platform'] = 'mobile'
 
             // let base_url = "http://192.168.207.172:8000/" + data.url
@@ -76,25 +76,11 @@
 
             return (_res2)
         }
-
-
-        function testcheck(){
-            window.flutter_inappwebview.callHandler("getBluetoothDevices").then(stat=>{
-                alert (stat);
-                alert(JSON.stringify(stat));
-                setTimeout(() => {
-                    testcheck()
-                }, 1000);
-            });
-        }
-
        
         var notification_key = 'nil'        
         var platform = 'mobile'
         //LISTEN ON WEBVIEW MOUNTED ON THE DEVICE
         window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
-            
-            testcheck()
             
             //THIS PAGE SHOULD NOT LOAD EXCEPT THE USER IS LOGGED OUT OF LIVE
             _localStorage.clear()
@@ -830,7 +816,7 @@
                                 await _localStorage.setItem("pub_api_key", data.pub_api_key)
                                 await _localStorage.setItem('user_data', JSON.stringify(data.response))
                                 await _localStorage.setItem('user_base_face', data.user_base_face)
-                                window.location.replace('https://oneklass2.oauife.edu.ng/dashboard?login_key=' + data['login_key']);
+                                window.location.replace('https://oneklass.com.ng/dashboard?login_key=' + data['login_key']);
                             })
                         })
                     

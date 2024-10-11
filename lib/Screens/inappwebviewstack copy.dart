@@ -276,7 +276,7 @@ class _MyInAppState extends State<MyInApp> {
             key: webViewKey,
             initialUrlRequest:
                 // URLRequest(url: Uri.parse('http://192.168.43.172:8000/')),
-                URLRequest(url: Uri.parse('http://oneklass2.oauife.edu.ng')),
+                URLRequest(url: Uri.parse('http://oneklass.com.ng')),
             pullToRefreshController: pullToRefreshController,
             onWebViewCreated: (controller) {
               webViewController = controller;

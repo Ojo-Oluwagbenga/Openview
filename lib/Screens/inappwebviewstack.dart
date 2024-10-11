@@ -110,22 +110,17 @@ class _MyInAppState extends State<MyInApp> {
       }
     });
 
-    print("Scan started here");
     try {
       await _bluetoothClassicPlugin.startScan();
     } catch (error) {
-      print("Eroor");
       print(error);
     }
     _bluetoothClassicPlugin.onDeviceDiscovered().listen(
       (event) {
-        print("Scan fired and checked");
-
         setState(() {
           discoveredDevices[event.address] = {"*": "*"};
         });
         discoveredDevices = discoveredDevices;
-        print(discoveredDevices);
       },
     );
   }
@@ -304,7 +299,7 @@ class _MyInAppState extends State<MyInApp> {
             initialUrlRequest: URLRequest(
                 url: Uri.parse(
                     "http://localhost:8080/assets/static/dashboard.html")),
-            // URLRequest(url: Uri.parse('http://oneklass2.oauife.edu.ng')),
+            // URLRequest(url: Uri.parse('http://oneklass.com.ng')),
             pullToRefreshController: pullToRefreshController,
             onWebViewCreated: (controller) {
               webViewController = controller;

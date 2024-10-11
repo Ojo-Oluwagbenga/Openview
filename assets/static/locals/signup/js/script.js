@@ -36,13 +36,13 @@ class _localStorage {
 
 
 async function _axios(data){
-    let base_url = "https://oneklass2.oauife.edu.ng/" + data.url
+    let base_url = "https://oneklass.com.ng/" + data.url
     let subdata = [
         {
             "requestName":"req_name",
             "data":data.data,
             "url": base_url,
-            // "base_url":'oneklass2.oauife.edu.ng',
+            // "base_url":'oneklass.com.ng',
             // "route":'api/open/class/fetch',
             "protocol":'https',
             "method":data.method,

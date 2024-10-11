@@ -86,7 +86,7 @@
 
                 <data
                     android:scheme="http"
-                    android:host="https://oneklass.oauife.edu.ng" />
+                    android:host="https://oneklass.com.ng" />
                 <data android:scheme="https" />
             </intent-filter>
 

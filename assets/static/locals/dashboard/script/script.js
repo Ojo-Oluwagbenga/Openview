@@ -1,7 +1,7 @@
 $(document).ready(function(){
     let user_data = JSON.parse(_localStorage.getItem("user_data")); //THIS IS SET UPON LOGING IN
     let destroyed = $("meta[name='destroyed']").attr("content");
-    let origin = 'https://oneklass2.oauife.edu.ng';
+    let origin = 'https://oneklass.com.ng';
     if (destroyed == 'True'){ //This would not work in offline
         confirmChoice({
             head:"New Device Detected",
