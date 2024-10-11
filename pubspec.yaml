@@ -61,6 +61,7 @@ dependencies:
   geolocator: ^11.0.0
   google_api_availability: ^5.0.0
   http: ^1.2.0
+  timezone:
   flutter_native_splash: ^2.4.1
   
 
@@ -71,19 +72,21 @@ flutter_native_splash:
 
   color: "#ffffff"
   image: images/oneklass.png
-  branding: images/bottom.png
-  color_dark: "#333333"
-  image_dark: images/oneklass.png
-  branding_dark: images/bottom.png
+  branding: images/branding_lowerv_white.png
+  
+  color_dark: "#000000"
+  image_dark: images/black_ok.png
+  branding_dark: images/branding_lowerv_black.png
   
   android_12:
     color: "#ffffff"
     image:  images/oneklass.png
     branding: images/bottom.png
     icon_background_color: "#ffffff"
-    branding_dark: images/bottom.png
-    image_dark:   images/oneklass.png
-    icon_background_color_dark: "#333333"
+
+    branding_dark: images/black_bottom.png
+    image_dark:   images/black_ok.png
+    icon_background_color_dark: "#000000"
 
 
 

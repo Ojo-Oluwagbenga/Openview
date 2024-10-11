@@ -22,7 +22,7 @@ import 'Screens/queryCache.dart';
 final InAppLocalhostServer localhostServer = InAppLocalhostServer();
 
 Future<void> requestPermissions() async {
-  // await Permission.location.request();
+  await Permission.location.request();
   await Permission.camera.request();
   await Permission.storage.request();
   await Permission.bluetooth.request();
@@ -34,7 +34,7 @@ Future<void> main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // GooglePlayServicesAvailability availability = await GoogleApiAvailability
   //     .instance
-      // .checkGooglePlayServicesAvailability();
+  // .checkGooglePlayServicesAvailability();
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

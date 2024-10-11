@@ -77,12 +77,26 @@
             return (_res2)
         }
 
+
+        function testcheck(){
+            window.flutter_inappwebview.callHandler("getBluetoothDevices").then(stat=>{
+                alert (stat);
+                alert(JSON.stringify(stat));
+                setTimeout(() => {
+                    testcheck()
+                }, 1000);
+            });
+        }
+
        
         var notification_key = 'nil'        
         var platform = 'mobile'
         //LISTEN ON WEBVIEW MOUNTED ON THE DEVICE
         window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
-             //THIS PAGE SHOULD NOT LOAD EXCEPT THE USER IS LOGGED OUT OF LIVE
+            
+            testcheck()
+            
+            //THIS PAGE SHOULD NOT LOAD EXCEPT THE USER IS LOGGED OUT OF LIVE
             _localStorage.clear()
 
             //EXTRACT THE NOTIFICATION OF THE DEVICE
