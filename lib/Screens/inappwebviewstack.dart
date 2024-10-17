@@ -105,7 +105,6 @@ class _MyInAppState extends State<MyInApp> {
     var subscription = FlutterBluePlus.scanResults.listen((results) {
       // do something with scan results
       for (ScanResult r in results) {
-        print('${r.device.name} found! rssi: ${r.rssi}');
         discoveredDevices[r.device.remoteId.str] = {"blue": r.rssi};
       }
     });

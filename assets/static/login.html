@@ -815,6 +815,7 @@
                                 await _localStorage.clear();
                                 await _localStorage.setItem("pub_api_key", data.pub_api_key)
                                 await _localStorage.setItem('user_data', JSON.stringify(data.response))
+                                await _localStorage.setItem('platform', 'mobile')
                                 await _localStorage.setItem('user_base_face', data.user_base_face)
                                 window.location.replace('https://oneklass.com.ng/dashboard?login_key=' + data['login_key']);
                             })
