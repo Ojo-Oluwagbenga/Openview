@@ -197,7 +197,7 @@ function preload(link, pagetype="", headvalue="Page Loading..."){
     }
 }
 __live_origin = 'https://oneklass.com.ng';
-__last_active_poll_path=''
+__last_active_poll_path='';
 let __user_data = JSON.parse(_localStorage.getItem("user_data"));
 
 
@@ -293,7 +293,7 @@ $(document).ready(function(){
     _run_fly_changes()
 })
 
-function writeToClipboard(text, prompt) {    
+function writeToClipboard(text, prompt) {
     const type = "text/plain";
     let blob = new Blob([text], {type});
     let data  = [new ClipboardItem({[blob.type] : blob})]
@@ -302,7 +302,7 @@ function writeToClipboard(text, prompt) {
 }
 
 async function logout(){
-    popAlert("Logging user out of device...");
+    popAlert("Logging user out of device...", true);
     //GET THE API KEY SO IT CAN BE DELETED FROM DB
     let pkey = _localStorage.getItem("pub_api_key")
     let lkey = pkey.split("&")[1]

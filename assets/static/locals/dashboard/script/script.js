@@ -373,15 +373,6 @@ $(document).ready(function(){
             positiveCallback:logout
         })
     })
-    async function logout(){
-        alert ("Throwing out");
-        popAlert("Logging user out of device...");
-        //GET THE API KEY SO IT CAN BE DELETED FROM DB
-        let pkey = _localStorage.getItem("pub_api_key")
-        let lkey = pkey.split("&")[1]
-        window.location.replace(__live_origin + '/logout?key=' + lkey)
-    }
-
     function toggleHam(tgi){
         if (tgi == 1){
             $(".nav-tab").css({
