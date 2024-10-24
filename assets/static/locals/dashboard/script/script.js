@@ -82,6 +82,7 @@ $(document).ready(function(){
             }
             confirmChoice(data);
         }).catch(error => {
+            alert(error);
             console.error(error)
         })
 

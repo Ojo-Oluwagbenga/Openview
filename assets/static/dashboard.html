@@ -190,7 +190,8 @@
                     <div class="head">Device offline</div>
                     <div class="text">Connection not established. What would you like to do?</div>
                     <div class="refresh" id="refresh">Refresh</div>
-                    <div class="refresh" id="local_attendance">Use local attendance</div>
+                    <div class="refresh" id="local_attendance">Take local attendance</div>
+                    <div class="refresh" id="sub_local_attendance">Open Sublocal Attendance</div>
                     <div class="but-hold">
                         <div class="actions negative" >Cancel</div>
                     </div>
@@ -208,12 +209,17 @@
                     }
                 </style>
                 <script>
-                    function offline_options(data){
+                    function pop_offline(data){
                         if (data){
+                            if (data.type == 'SLOW_NET' && __device_offline){
+                                return
+                            }
                             if (data.head){
                                 $("#_alertsuper .head").text(data.head);
                             }
                         }
+                        let __user_data = JSON.parse(_localStorage.getItem("user_data"));
+
                         $("#_alertsuper").css({"display":'flex'});
                         $("#_alertsuper #refresh").click(function(){
                             location.reload()
@@ -221,6 +227,13 @@
                         $("#_alertsuper #local_attendance").click(function(){
                             window.location.href = 'http://localhost:8080/assets/static/takeattendance.html'
                         })
+                        if (__user_data.user_type == 'instructor'){
+                            $("#_alertsuper #sub_local_attendance").click(function(){
+                                window.location.href = 'http://localhost:8080/assets/static/initiateattendance.html'
+                            })
+                        }else{
+                            $("#_alertsuper #sub_local_attendance").remove()
+                        }
                         $("#_alertsuper .negative").click(function(){
                             $("#_alertsuper").css({"display":'none'});
                             setTimeout(() => {
@@ -236,7 +249,7 @@
             <div class="offline_pop c-vert gelatine bounce" style="display: none;">
                 <div class="cont">
                     <img src="../static/locals/general/images/nointernet.png" alt="" srcset="">
-                    <div class="slash">No Internet. Click for more options</div>
+                    <div class="slash">Network issues. Click for more options</div>
                     <div class="mcancel c-vert" style="margin: 0 10px;">
                         <svg style="height: 12px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
                     </div>
@@ -281,7 +294,7 @@
                 </style>
                 <script>
                     $(".offline_pop").click(function(){
-                        offline_options()
+                        pop_offline()
                     })
                     $(".offline_pop .mcancel").click(function(){
                         $(".offline_pop").css({'display':'none'})
@@ -289,7 +302,7 @@
                     function initiate_offline_pop(){
                         __device_offline = true;
                         $(".offline_pop").css({'display':'flex'})
-                        offline_options()
+                        pop_offline()
                         
                     }
                     

@@ -7,7 +7,6 @@ import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:one_klass/firebase_options.dart';
 import 'package:one_klass/api/firebase_api.dart';
 import 'package:one_klass/localnotification.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -271,21 +270,11 @@ class _MyInAppState extends State<MyInApp> {
                   disableHorizontalScroll: false),
             ),
             onDownloadStartRequest: (controller, url) async {
-              Directory? tempDir = await getExternalStorageDirectory();
-              setState(() {});
-
-              await FlutterDownloader.enqueue(
-                url: url.url.toString(),
-                savedDir: tempDir!.path,
-                showNotification: true,
-                fileName: 'testing',
-                // url.suggestedFilename,
-                saveInPublicStorage: true,
-                // show download progress in status bar (for Android)
-                openFileFromNotification:
-                    true, // click on notification to open downloaded file (for Android)
-              );
+              try {
+                controller.evaluateJavascript(source: "redirectToWeb();");
+              } catch (error) {}
             },
+
             onLoadError: (controller, url, i, s) {
               webViewController.loadFile(
                   assetFilePath: "assets/static/not_found.html");
@@ -314,15 +303,15 @@ class _MyInAppState extends State<MyInApp> {
               controller.addJavaScriptHandler(
                 handlerName: 'openExternal',
                 callback: (args) async {
-                  for (String a in args) {
-                    if (await canLaunchUrl(Uri.parse(a))) {
-                      await launchUrl(Uri.parse(a));
-                    } else {
-                      const ScaffoldMessenger(
-                        child: Text('Unable to complete action, try again'),
-                      );
-                      throw 'Could not launch $a';
-                    }
+                  var url = args[0];
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url));
+                  } else {
+                    const ScaffoldMessenger(
+                      child: Text(
+                          'Could not launch. Kindly access page with the browser'),
+                    );
+                    throw 'Could not launch. Kindly access page with the browser';
                   }
                 },
               );

@@ -100,7 +100,56 @@ async function _axios(data){
 
     
 }
-async function _check_app_update(){
+// async function _check_app_update(){
+//     let ret = await async_communicator('fetchCache', ['VERSION_UPDATE'])
+//     if (!ret){
+//         return
+//     }
+//     let VERSION_UPDATE = JSON.parse(ret['VERSION_UPDATE']);
+
+//     if (VERSION_UPDATE["__LATEST_APP_VERSION"] != __APP_VERSION){ // __APP_VERSION IS STATICALLY SET ON THE LOCAL GENERALSCRIPT
+//         let vtime = VERSION_UPDATE['__APP_DATA']['max_date']
+//         let stime = (new Date()/1000)
+//         if (vtime > stime){
+//             //SHOW THE USER THE WARNING FOR TERMINATION
+//             let days = (Math.floor((vtime - stime)/(86400)))
+//             let text = ""
+//             if (days > 1){
+//                 text = "in " + days + " days time"
+//             }
+//             if (days == 1){
+//                 text = "by tommorrow"
+//             }
+//             if (days == 0){
+//                 text = "in a few moment"
+//             }
+//             confirmChoice({
+//                 head:"Version Update!",
+//                 text:"An update of the app is now available on playstore. This version will no longer be supported " + text,
+//                 positiveCallback:async ()=>{
+//                     //DIRECT THEM TO PLAYSTORE
+//                     await window.flutter_inappwebview.callHandler("openStore", '')
+//                 },
+//                 negativeCallback:()=>{}
+//             })
+//         }else{
+//             //SHOW THE USER THAT THE APP IS NO LONGER USABLE
+//             confirmChoice({
+//                 head:"Version Outdated!",
+//                 text:"An update of the app is now available on playstore. This version is no longer supported.",
+//                 positiveCallback:async ()=>{
+//                     //DIRECT THEM TO PLAYSTORE
+//                     await window.flutter_inappwebview.callHandler("openStore", '')
+//                 },
+//                 prevent_cancel:true,
+//                 negativeCallback:()=>{
+//                     popAlert("Please get the new version now")
+//                 }
+//             })
+//         }
+//     }
+// }
+async function _check_app_update(){ //GETS CALLED IN THE LOCAL DASHBOARD SCRIPT
     let ret = await async_communicator('fetchCache', ['VERSION_UPDATE'])
     if (!ret){
         return
@@ -125,10 +174,11 @@ async function _check_app_update(){
             }
             confirmChoice({
                 head:"Version Update!",
-                text:"An update of the app is now available on playstore. This version will no longer be supported " + text,
+                text:"An update of the app is now available on Oneklass's website. This version will no longer be supported " + text,
                 positiveCallback:async ()=>{
-                    //DIRECT THEM TO PLAYSTORE
-                    await window.flutter_inappwebview.callHandler("openStore", '')
+                    //DIRECT THEM TO THE WEBSITE
+                    let url = __live_origin + '/getapp';
+                    window.flutter_inappwebview.callHandler("openExternal", url).then(stat=>{});
                 },
                 negativeCallback:()=>{}
             })
@@ -136,10 +186,11 @@ async function _check_app_update(){
             //SHOW THE USER THAT THE APP IS NO LONGER USABLE
             confirmChoice({
                 head:"Version Outdated!",
-                text:"An update of the app is now available on playstore. This version is no longer supported.",
+                text:"An update of the app is now available on Oneklass's website. This version is no longer supported.",
                 positiveCallback:async ()=>{
-                    //DIRECT THEM TO PLAYSTORE
-                    await window.flutter_inappwebview.callHandler("openStore", '')
+                    //DIRECT THEM TO THE WEBSITE
+                    let url = __live_origin + '/getapp';
+                    window.flutter_inappwebview.callHandler("openExternal", url).then(stat=>{});
                 },
                 prevent_cancel:true,
                 negativeCallback:()=>{
@@ -149,6 +200,7 @@ async function _check_app_update(){
         }
     }
 }
+
 function _run_fly_changes(){
     communicator('fetchCache', ['__UPDATE_HOTDATA'], (ret)=>{
         if (!ret){
@@ -175,6 +227,21 @@ async function _writeallcachetolocalstorage(){
     for (const key in lstore) {
         localStorage.setItem(key, lstore[key])            
     }
+}
+function redirectToWeb(subaddress){
+    confirmChoice({
+        head:"Open Browser?",
+        text:"You will be redirected to the browser for a better view and download experience.",
+        negativeCallback:()=>{},
+        positiveCallback:()=>{
+            let url = window.location.href;
+            if (subaddress){
+                url = __live_origin + subaddress; //SUBADDRESS CAN BE /account or so
+            }
+            window.flutter_inappwebview.callHandler("openExternal", url).then(stat=>{});
+        }
+    })
+    
 }
 try {
     window.addEventListener("flutterInAppWebViewPlatformReady", async function(event) {
